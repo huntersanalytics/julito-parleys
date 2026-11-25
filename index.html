@@ -1,0 +1,559 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Julito Parleys</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: estadio de noche — banda de césped con rayas de corte y marcador dorado arriba, navegación fija por deporte, tableros de tarjetas con medidor circular, boletos de parley al pie. */
+:root {
+  --bg: #eef2ee;
+  --surface: #ffffff;
+  --surface-2: #f6f8f5;
+  --ink: #142019;
+  --muted: #5b6a60;
+  --line: #d9e1da;
+  --turf-1: #0e3a27;
+  --turf-2: #124630;
+  --chalk: #f4f7f2;
+  --gold: #f2b134;
+  --gold-ink: #3a2700;
+  --sel: #1d8a55;
+  --club: #2563c9;
+  --base: #c4592a;
+  --mlb: #b42b3c;
+  --parley: #16271d;
+  --good: #1d8a55;
+  --warn: #b77a00;
+  --bad: #c0392f;
+  --shadow: 0 1px 2px rgba(15, 40, 25, 0.06), 0 6px 20px rgba(15, 40, 25, 0.07);
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0c120e; --surface: #151d18; --surface-2: #1a241e; --ink: #e6ede8; --muted: #95a59a; --line: #27332c;
+  --turf-1: #0a2a1c; --turf-2: #0d3524; --sel: #45c487; --club: #6b9cf0; --base: #ec8a55; --mlb: #ef6b7a;
+  --parley: #0f1a14; --good: #45c487; --warn: #e6ae3e; --bad: #ef6b62;
+  --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0c120e; --surface: #151d18; --surface-2: #1a241e; --ink: #e6ede8; --muted: #95a59a; --line: #27332c;
+  --turf-1: #0a2a1c; --turf-2: #0d3524; --sel: #45c487; --club: #6b9cf0; --base: #ec8a55; --mlb: #ef6b7a;
+  --parley: #0f1a14; --good: #45c487; --warn: #e6ae3e; --bad: #ef6b62;
+  --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35); color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--turf-1); }
+.ico { width: 1.15em; height: 1.15em; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.2em; }
+.inner { max-width: 1100px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* ---------- Hero: césped ---------- */
+.hero { color: var(--chalk); background:
+  radial-gradient(120% 90% at 85% -10%, rgba(242,177,52,0.22), transparent 55%),
+  repeating-linear-gradient(90deg, var(--turf-1) 0 64px, var(--turf-2) 64px 128px); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; left: 50%; top: 100%; width: 340px; height: 340px; transform: translate(-50%, -50%); border: 2px solid rgba(244,247,242,0.13); border-radius: 50%; pointer-events: none; }
+.hero .inner { padding-block: 26px 30px; display: flex; flex-direction: column; gap: 18px; position: relative; z-index: 1; }
+.hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo { width: 46px; height: 46px; border-radius: 12px; background: var(--gold); color: var(--gold-ink); display: grid; place-items: center; box-shadow: 0 4px 14px rgba(242,177,52,0.35); }
+.logo .ico { width: 28px; height: 28px; stroke-width: 2.1; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 6vw, 3.1rem); line-height: 0.95; letter-spacing: 0.01em; margin: 0; text-transform: uppercase; }
+h1 span { color: var(--gold); }
+.live { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(0,0,0,0.25); border: 1px solid rgba(244,247,242,0.18); padding: 6px 12px; border-radius: 999px; }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(242,177,52,0.7); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(242,177,52,0.6); } 70% { box-shadow: 0 0 0 9px rgba(242,177,52,0); } 100% { box-shadow: 0 0 0 0 rgba(242,177,52,0); } }
+.summary { max-width: 70ch; margin: 0; color: rgba(244,247,242,0.82); font-size: 0.98rem; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.kpi { background: rgba(0,0,0,0.28); border: 1px solid rgba(244,247,242,0.14); border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; min-width: 0; backdrop-filter: blur(2px); }
+.kpi .ico { width: 30px; height: 30px; padding: 6px; border-radius: 8px; background: rgba(242,177,52,0.16); color: var(--gold); }
+.kpi b { display: block; font: 700 1.7rem/1 var(--display); font-variant-numeric: tabular-nums; color: #fff; }
+.kpi small { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(244,247,242,0.7); }
+
+.dates { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+.dates button { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 62px; font-family: var(--display); padding: 7px 10px; border-radius: 10px; border: 1px solid rgba(244,247,242,0.22); background: rgba(0,0,0,0.2); color: var(--chalk); cursor: pointer; transition: background .15s, transform .15s; }
+.dates button small { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; }
+.dates button b { font-size: 1.35rem; line-height: 1; }
+.dates button:hover { transform: translateY(-2px); background: rgba(0,0,0,0.32); }
+.dates button[aria-pressed="true"] { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
+.status { font-size: 0.85rem; color: var(--gold); }
+
+/* ---------- Navegación fija ---------- */
+.subnav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.subnav .inner { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.subnav a { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; text-decoration: none; color: var(--ink); font-weight: 600; font-size: 0.86rem; padding: 7px 13px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); transition: border-color .15s, color .15s; }
+.subnav a:hover { border-color: var(--k, var(--ink)); color: var(--k, var(--ink)); }
+.subnav a .n { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+
+main.inner { padding-block: 26px 56px; display: flex; flex-direction: column; gap: 34px; }
+
+/* ---------- Tableros ---------- */
+.board { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 70px; }
+.board-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.badge-ico { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: var(--k); box-shadow: 0 4px 14px color-mix(in srgb, var(--k) 35%, transparent); }
+.badge-ico .ico { width: 24px; height: 24px; }
+.board-head h2 { font: 800 1.7rem/1 var(--display); text-transform: uppercase; letter-spacing: 0.02em; margin: 0; }
+.board-head .tag { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--k); background: color-mix(in srgb, var(--k) 12%, transparent); padding: 4px 10px; border-radius: 999px; }
+.board-head .rule { flex: 1 1 40px; height: 2px; background: linear-gradient(90deg, var(--k), transparent); border-radius: 2px; min-width: 40px; }
+
+.picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.pick { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0; overflow: hidden; transition: transform .18s ease, box-shadow .18s ease; animation: rise .5s ease both; animation-delay: calc(var(--i, 0) * 70ms); }
+.pick:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 14px 32px color-mix(in srgb, var(--k) 22%, transparent); }
+@keyframes rise { from { transform: translateY(10px); } to { transform: none; } }
+.pick-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 16px; background: color-mix(in srgb, var(--k) 10%, var(--surface)); border-bottom: 1px solid color-mix(in srgb, var(--k) 18%, var(--line)); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.pick-top .lg { display: inline-flex; align-items: center; gap: 6px; color: var(--k); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-top .hr { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); white-space: nowrap; }
+.pick-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.teams { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+.team { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.92rem; line-height: 1.2; min-width: 0; }
+.team.away { flex-direction: row-reverse; text-align: right; }
+.crest { flex: 0 0 auto; display: grid; place-items: center; }
+.crest svg { display: block; width: 100%; height: 100%; }
+.crest.flag { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--line), 0 3px 8px rgba(0,0,0,0.18); }
+.crest.logo { width: 38px; height: 38px; border-radius: 50%; background: #fff; padding: 4px; box-shadow: 0 0 0 1px var(--line), 0 3px 8px rgba(0,0,0,0.16); }
+.crest.logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.crest.club { width: 34px; height: 36px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.22)); }
+.vs { font: 800 0.8rem/1 var(--display); color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.match-solo { font-weight: 600; }
+.bet-row { display: flex; align-items: center; gap: 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.ring { width: 64px; height: 64px; flex: 0 0 auto; position: relative; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .trk { stroke: var(--line); }
+.ring .val { stroke: var(--k); transition: stroke-dashoffset 1s ease; }
+.ring span { position: absolute; inset: 0; display: grid; place-items: center; font: 700 1.05rem/1 var(--mono); font-variant-numeric: tabular-nums; }
+.bet { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.bet small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.bet b { font: 700 1.4rem/1.05 var(--display); letter-spacing: 0.01em; text-wrap: balance; }
+.odds { align-self: flex-start; font: 700 0.95rem/1 var(--mono); padding: 5px 9px; border-radius: 6px; background: var(--parley); color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 9px; border-radius: 999px; background: color-mix(in srgb, var(--c) 13%, transparent); color: var(--c); }
+.chip .ico { width: 13px; height: 13px; stroke-width: 2.4; }
+.chip.alta { --c: var(--good); } .chip.media { --c: var(--warn); } .chip.baja { --c: var(--bad); }
+.chip.acierto { --c: var(--good); } .chip.fallo { --c: var(--bad); } .chip.pendiente, .chip.nulo { --c: var(--muted); }
+.why { margin: 0; font-size: 0.89rem; color: var(--muted); }
+.alt { display: flex; gap: 8px; align-items: flex-start; font-size: 0.86rem; padding: 9px 11px; border-radius: 10px; background: color-mix(in srgb, var(--good) 9%, transparent); color: var(--ink); margin-top: auto; }
+.alt .ico { color: var(--good); margin-top: 2px; }
+
+.empty { background: var(--surface); border: 1.5px dashed color-mix(in srgb, var(--k, var(--muted)) 40%, var(--line)); border-radius: 14px; padding: 20px; display: flex; gap: 14px; align-items: flex-start; }
+.empty .ico { width: 34px; height: 34px; padding: 7px; border-radius: 10px; color: var(--k, var(--muted)); background: color-mix(in srgb, var(--k, var(--muted)) 12%, transparent); }
+.empty div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.empty strong { font: 700 1.2rem/1.1 var(--display); text-transform: uppercase; letter-spacing: 0.03em; }
+.empty span { color: var(--muted); font-size: 0.92rem; max-width: 70ch; }
+
+/* ---------- Parleys: boletos ---------- */
+.parleys { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.ticket { position: relative; background: var(--parley); color: #eef3ef; border-radius: 14px; display: flex; flex-direction: column; min-width: 0; box-shadow: var(--shadow); animation: rise .5s ease both; animation-delay: calc(var(--i, 0) * 80ms); }
+.ticket::before, .ticket::after { content: ""; position: absolute; top: calc(100% - 74px); width: 20px; height: 20px; border-radius: 50%; background: var(--bg); }
+.ticket::before { left: -10px; } .ticket::after { right: -10px; }
+.ticket-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px 0; }
+.ticket-head .ico { color: var(--gold); width: 22px; height: 22px; }
+.ticket h3 { margin: 0; font: 800 1.3rem/1 var(--display); text-transform: uppercase; letter-spacing: 0.04em; }
+.ticket .res { margin-left: auto; }
+.ticket ul { list-style: none; margin: 0; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 7px; font-size: 0.9rem; }
+.ticket li { display: flex; gap: 8px; align-items: flex-start; }
+.ticket li .ico { color: var(--gold); width: 15px; height: 15px; margin-top: 3px; stroke-width: 2.4; }
+.ticket-foot { margin-top: auto; border-top: 2px dashed rgba(238,243,239,0.2); display: grid; grid-template-columns: 1fr 1fr; padding: 14px 16px; gap: 10px; }
+.ticket-foot span { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(238,243,239,0.6); }
+.ticket-foot b { font: 700 1.5rem/1.1 var(--mono); color: var(--gold); font-variant-numeric: tabular-nums; }
+.ticket-foot b.p { color: #fff; }
+.ticket .chip { --c: #eef3ef; }
+.ticket .chip.acierto { --c: #6fe0a6; } .ticket .chip.fallo { --c: #ff8f86; }
+
+/* ---------- Descartes y fuentes ---------- */
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.panel h3 { margin: 0; display: flex; align-items: center; gap: 8px; font: 800 1.15rem/1 var(--display); text-transform: uppercase; letter-spacing: 0.04em; }
+.panel h3 .ico { color: var(--muted); }
+.panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; }
+.panel li { display: flex; gap: 8px; align-items: flex-start; color: var(--muted); min-width: 0; }
+.panel li .ico { margin-top: 2px; width: 15px; height: 15px; color: var(--bad); }
+.panel a { color: var(--club); text-decoration: none; font-weight: 500; overflow-wrap: anywhere; }
+.panel a:hover { text-decoration: underline; }
+.panel li.src .ico { color: var(--club); }
+
+.risk { display: flex; gap: 9px; align-items: flex-start; font-size: 0.85rem; line-height: 1.4; padding: 9px 11px; border-radius: 10px; background: color-mix(in srgb, var(--bad) 11%, transparent); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); color: var(--ink); }
+.risk .ico { color: var(--bad); margin-top: 2px; }
+.risk b { color: var(--bad); }
+.pick.alto { border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.chip.r-bajo { --c: var(--good); } .chip.r-medio { --c: var(--warn); } .chip.r-alto { --c: var(--bad); }
+.ticket .risk { margin: 0 16px 12px; background: rgba(255,143,134,0.12); border-color: rgba(255,143,134,0.4); color: #eef3ef; }
+.ticket .risk .ico, .ticket .risk b { color: #ff8f86; }
+.perf { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.perf .panel h3 .ico { color: var(--club); }
+.prow { display: grid; grid-template-columns: minmax(0, 9.5rem) 1fr auto; gap: 10px; align-items: center; font-size: 0.86rem; }
+.prow > span:first-child { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pbar { position: relative; height: 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+.pbar i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: var(--c, var(--good)); }
+.pbar em { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); opacity: .55; border-radius: 1px; }
+.prow b { font: 700 0.85rem/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.prow b small { font-weight: 500; color: var(--muted); }
+.perf-legend { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.pop { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.popc { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.popc .top { display: flex; justify-content: space-between; gap: 8px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.popc .top span:first-child { color: #8a4fd6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.popc h4 { margin: 0; font: 700 1.25rem/1.1 var(--display); letter-spacing: 0.01em; }
+.popc .m { font-size: 0.86rem; color: var(--muted); margin-top: -6px; }
+.popbar { display: grid; grid-template-columns: 5.2rem 1fr 2.8rem; gap: 8px; align-items: center; font-size: 0.78rem; color: var(--muted); }
+.popbar .pbar i { background: #8a4fd6; }
+.popbar .pbar.money i { background: var(--gold); }
+.popbar b { font: 700 0.85rem/1 var(--mono); color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.vs-us { display: flex; gap: 8px; align-items: flex-start; font-size: 0.84rem; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+.vs-us .ico { margin-top: 2px; color: var(--c, var(--muted)); }
+.vs-us.si { --c: var(--good); } .vs-us.no { --c: var(--warn); }
+.popc .src { font-size: 0.75rem; color: var(--muted); }
+.popc .src a { color: var(--club); text-decoration: none; }
+.note { display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; margin: 0; }
+.note .ico { color: var(--warn); margin-top: 1px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+@media (max-width: 760px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 380px) { .picks, .parleys { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5l3.4 2.5-1.3 4h-4.2l-1.3-4z"/><path d="M12 3v4.5M15.4 10l4.9-1.6M14.1 14l3 4.1M9.9 14l-3 4.1M8.6 10L3.7 8.4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M12 8.2l1.2 2.4 2.6.4-1.9 1.8.5 2.6-2.4-1.3-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/></symbol>
+  <symbol id="i-baseball" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M6.3 5.2c2.3 2.6 2.3 11 0 13.6M17.7 5.2c-2.3 2.6-2.3 11 0 13.6"/><path d="M7.6 8.2l1.6-.4M8.2 11l1.6-.1M8.2 13.9l1.6.1M7.6 16.2l1.6.4M16.4 8.2l-1.6-.4M15.8 11l-1.6-.1M15.8 13.9l-1.6.1M16.4 16.2l-1.6.4"/></symbol>
+  <symbol id="i-diamond" viewBox="0 0 24 24"><path d="M12 3.5l8.5 8.5-8.5 8.5L3.5 12z"/><circle cx="12" cy="12" r="1.6"/><path d="M12 20.5V16M7.8 7.8l1.5 1.5M16.2 7.8l-1.5 1.5"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3.5 7.5h17v3a1.8 1.8 0 000 3.6v3.4h-17v-3.4a1.8 1.8 0 000-3.6z"/><path d="M14.5 7.5v10" stroke-dasharray="1.6 2"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 01-8 0z"/><path d="M8 6H5a3 3 0 003 4.5M16 6h3a3 3 0 01-3 4.5M12 13v3.5M8.5 20h7M9.5 16.5h5V20h-5z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c.8 3 4.5 5 4.5 9.5a4.5 4.5 0 01-9 0c0-2 .9-3.5 2.2-4.5 0 1.8.8 3 1.8 3.3C11 8.7 11 5.6 12 3z"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 16a8 8 0 1116 0"/><path d="M12 16l4-5"/><circle cx="12" cy="16" r="1.2"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.8" cy="6.5" r="1"/><circle cx="4.8" cy="12" r="1"/><circle cx="4.8" cy="17.5" r="1"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1.2-1.2"/></symbol>
+  <symbol id="i-safe" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5M12 17.3v.2"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19 14.5A7.5 7.5 0 019.5 5a7.5 7.5 0 109.5 9.5z"/></symbol>
+</svg>
+
+<header class="hero">
+  <div class="inner">
+    <div class="hero-top">
+      <div class="brand">
+        <div class="logo"><svg class="ico"><use href="#i-trophy"/></svg></div>
+        <h1>Julito <span>Parleys</span></h1>
+      </div>
+      <span class="live"><i></i><span id="stamp">Cargando jornada…</span></span>
+    </div>
+    <p class="summary" id="summary">Las 3 jugadas con mayor probabilidad estadística del día en fútbol de selecciones, clubes de primera división, béisbol invernal y MLB.</p>
+    <div class="kpis" id="kpis"></div>
+    <div class="dates" id="dates" role="group" aria-label="Elegir jornada"></div>
+    <div class="status" id="status" hidden></div>
+  </div>
+</header>
+
+<nav class="subnav" aria-label="Secciones"><div class="inner" id="subnav"></div></nav>
+
+<main class="inner">
+  <div id="boards" style="display:flex;flex-direction:column;gap:34px"></div>
+
+  <section class="board" id="parleys-sec" style="--k: var(--gold)">
+    <div class="board-head">
+      <div class="badge-ico" style="color: var(--gold-ink)"><svg class="ico"><use href="#i-ticket"/></svg></div>
+      <h2>Parleys sugeridos</h2><span class="rule"></span>
+    </div>
+    <div class="parleys" id="parleys"></div>
+  </section>
+
+  <section class="board" id="populares-sec" style="--k: #8a4fd6">
+    <div class="board-head">
+      <div class="badge-ico"><svg class="ico"><use href="#i-flame"/></svg></div>
+      <h2>Lo que más apuesta la gente</h2><span class="tag">Público en las casas</span><span class="rule"></span>
+    </div>
+    <div class="pop" id="populares"></div>
+    <p class="perf-legend">Porcentaje de boletos (y de dinero, cuando se publica) que el público puso en cada jugada, según sitios de consenso y casas de apuestas. Que mucha gente apueste algo no lo hace más probable: compáralo con nuestra probabilidad.</p>
+  </section>
+
+  <section class="board" id="rendimiento" style="--k: var(--club)">
+    <div class="board-head">
+      <div class="badge-ico"><svg class="ico"><use href="#i-target"/></svg></div>
+      <h2>Rendimiento</h2><span class="tag" id="perf-tag">Historial</span><span class="rule"></span>
+    </div>
+    <div class="perf" id="perf"></div>
+  </section>
+
+  <div class="two">
+    <section class="panel" id="sec-d" hidden>
+      <h3><svg class="ico"><use href="#i-ban"/></svg>Descartados del día</h3>
+      <ul id="discards"></ul>
+    </section>
+    <section class="panel" id="sec-s" hidden>
+      <h3><svg class="ico"><use href="#i-link"/></svg>Fuentes consultadas</h3>
+      <ul id="sources"></ul>
+    </section>
+  </div>
+
+  <p class="note"><svg class="ico"><use href="#i-alert"/></svg><span>Las probabilidades son estimaciones a partir de cuotas de mercado y modelos públicos; ningún pronóstico es seguro. Cada jugada que agregas a un parley multiplica el riesgo. Apuesta solo lo que estés dispuesto a perder.</span></p>
+</main>
+
+<!-- DATOS: arreglo JSON de jornadas (una por día, máx. 30). Lo reescribe la rutina diaria. -->
+<script type="application/json" id="jornadas-data">
+[{"fecha": "2026-11-24", "actualizado": "24 nov, 9:05 a. m. GMT-4", "resumen": "Martes de Champions League (jornada 5) con Real Madrid-PSV, Man City-Napoli y Arsenal-Dortmund como favoritos claros. No hay selecciones absolutas ni MLB, y no pude confirmar el calendario ni los abridores de la LVBP. Varios sitios (Rotowire, SportsBettingDime, ESPN) no abrieron desde esta sesión, así que las cuotas salen de las vistas previas que aparecen en las búsquedas.", "futbol_tag": "Sin selecciones absolutas", "futbol": [], "clubes_tag": "Champions League · Jornada 5", "clubes": [{"liga": "Champions League", "hora": "3:00 p. m. ET (20:00 Reino Unido; hora por confirmar)", "partido": "Real Madrid vs. PSV", "jugada": "Gana Real Madrid", "cuota": "1.22", "prob": 78, "razon": "Wincomparator lista 1.22 por Real Madrid, 6.50 el empate y 9.50 PSV (~78% sin margen); Footballpredictions.com proyecta 3-1. Juega en casa ante un rival con más de nueve veces su cuota.", "alternativa": "Real Madrid -1.5 hándicap (sin cuota hallada)", "resultado": "acierto", "marcador": "5-1"}, {"liga": "Champions League", "hora": "3:00 p. m. ET (20:00 GMT)", "partido": "Manchester City vs. Napoli", "jugada": "Gana Manchester City", "cuota": "1.25", "prob": 77, "razon": "Forzafootball da 77% a City, 14% empate y 9% Napoli (sin margen) con cuota 1/4 en bet365 y proyecta 2-1. Napoli ha perdido tres de sus cuatro partidos europeos; City pierde a Semenyo por lesión.", "alternativa": "Más de 1.5 goles (las proyecciones suman 3 goles o más)", "resultado": "fallo", "marcador": "2-2"}, {"liga": "Champions League", "hora": "3:00 p. m. ET (20:00 GMT)", "partido": "Arsenal vs. Borussia Dortmund", "jugada": "Gana Arsenal", "cuota": "1.40", "prob": 63, "razon": "ATS.io da 63% a Arsenal y Wincomparator 60.75%; bet365 paga 2/5. Las proyecciones van de 2-0 a 2-1. Riesgo: varias fuentes marcan la ausencia de Saka y Dortmund llega con forma W L W W.", "alternativa": "Menos de 3.5 goles (un sitio lo sugiere a -123)", "resultado": "fallo", "marcador": "1-1"}], "clubes_nota": "", "beisbol": [], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Gana Real Madrid", "Gana Manchester City"], "cuota": "~1.53", "prob": "60", "resultado": "fallo"}, {"nombre": "Champions triple", "jugadas": ["Gana Real Madrid", "Gana Manchester City", "Gana Arsenal"], "cuota": "~2.13", "prob": "38", "resultado": "fallo"}, {"nombre": "Ingleses", "jugadas": ["Gana Manchester City", "Gana Arsenal"], "cuota": "~1.75", "prob": "49", "resultado": "fallo"}], "descartes": ["Galatasaray vs. Aston Villa: las fuentes se contradicen (una da 2-1 local y otra 1-2 visitante) y no hallé una cuota 1X2 confiable.", "Feyenoord vs. Porto y Como vs. AEK Atenas: sin previas ni cuotas accesibles (un sitio proyecta 1-1 en el primero).", "Chapecoense vs. Palmeiras: la fuente lo ubica el 28 de noviembre, no hoy.", "LVBP: no confirmé el calendario ni los abridores del martes 24; sin datos suficientes.", "Resultado de ayer confirmado: Santos 0-2 Grêmio (Amuzu y penalti de Braithwaite).", "Resultados reales del 24 nov: Real Madrid 5-1 PSV, Man City 2-2 Napoli, Arsenal 1-1 Dortmund, Galatasaray 1-0 Aston Villa, Feyenoord 0-1 Porto y Como 1-0 AEK."], "fuentes": [{"nombre": "Wincomparator – Real Madrid vs. PSV", "url": "https://www.wincomparator.com/predictions/real-madrid-psv-eindhoven-8786669/"}, {"nombre": "Footballpredictions.com – Real Madrid vs. PSV", "url": "https://footballpredictions.com/footballpredictions/championsleaguepredictions/real-madrid-vs-psv-prediction-24-11-2026/"}, {"nombre": "Forzafootball – Man City vs. Napoli", "url": "https://forzafootball.com/gb/play/betting-tips/manchester-city-vs-napoli-champions-league-predictions-odds"}, {"nombre": "Forzafootball – Arsenal vs. Dortmund", "url": "https://forzafootball.com/gb/play/betting-tips/arsenal-vs-dortmund-champions-league-predictions-odds"}, {"nombre": "ATS.io – Dortmund vs. Arsenal", "url": "https://ats.io/matchup/champions-league/borussia-dortmund-vs-arsenal-prediction-24-11-2026/"}, {"nombre": "Wincomparator – Arsenal vs. Dortmund", "url": "https://www.wincomparator.com/predictions/arsenal-borussia-dortmund-8786664/"}, {"nombre": "Footballpredictions.com – Galatasaray vs. Aston Villa", "url": "https://footballpredictions.com/footballpredictions/championsleaguepredictions/galatasaray-vs-aston-villa-prediction-24-11-2026/"}, {"nombre": "VAVEL – Santos 0-2 Grêmio", "url": "https://www.vavel.com/br/futebol/2026/11/23/1280400-santos-x-gremio-ao-vivo-brasileirao.html"}]}, {"fecha": "2026-11-23", "actualizado": "23 nov, 9:05 a. m. GMT-4", "resumen": "Lunes con Brasileirão (Santos-Grêmio, Botafogo-São Paulo), Serie A (Monza-Fiorentina), LaLiga y Premier League (Levante-Elche, Brentford-Everton) y un juego de la LVBP. No hay selecciones absolutas ni MLB. Varios sitios no abrieron desde esta sesión, así que las cuotas faltan en muchas jugadas y no hallé abridores de la LVBP.", "futbol_tag": "Sin selecciones absolutas", "futbol": [], "clubes_tag": "Brasileirão · Serie A", "clubes": [{"liga": "Brasileirão", "hora": "4:00 p. m. ET (6:00 p. m. Brasil)", "partido": "Santos vs. Grêmio", "jugada": "Santos no pierde (1X)", "cuota": "s/d", "prob": 83, "razon": "SportyTrader da 64.8% a Santos y 21.4% al empate (86% para 1X) con cuota de 1.61 para la victoria; Pinnacle vía tips.gg implica 60.6% y 23.4% (84%). Juega en casa y las fuentes lo ven en ascenso en el segundo semestre.", "alternativa": "Santos gana a 1.61-1.65", "resultado": "fallo", "marcador": "0-2"}, {"liga": "Brasileirão", "hora": "Por confirmar (noche en Brasil)", "partido": "Botafogo vs. São Paulo", "jugada": "Botafogo no pierde (1X)", "cuota": "s/d", "prob": 70, "razon": "Statz da 41% a Botafogo y 29% al empate (70% para 1X); las casas le dan ~47% de victoria y São Paulo paga +230. São Paulo lleva cuatro partidos de visitante sin ganar y ScoreGPT y SportsGambler proyectan 1-0.", "alternativa": "Menos de 2.5 goles (FreeTips y SportsGambler lo sugieren; sin cuota)", "resultado": "acierto", "marcador": "1-1"}, {"liga": "Serie A", "hora": "Por confirmar (noche en Italia)", "partido": "Monza vs. Fiorentina", "jugada": "Fiorentina no pierde (X2)", "cuota": "s/d", "prob": 70, "razon": "Statz da 46% a Fiorentina, 24% al empate y 30% a Monza (70% para X2); Coral paga 1.95 la victoria visitante y SportyTrader da 41% con cuota 2.03. Es el modelo más cauto: Statz proyecta 1-1.", "alternativa": "Ambos anotan: Statz 64%, Scores24 a 1.53", "resultado": "fallo", "marcador": "3-0"}], "clubes_nota": "", "beisbol": [], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Santos no pierde (1X)", "Botafogo no pierde (1X)"], "cuota": "s/d", "prob": "58", "resultado": "fallo"}, {"nombre": "Fútbol clubes", "jugadas": ["Santos no pierde (1X)", "Botafogo no pierde (1X)", "Fiorentina no pierde (X2)"], "cuota": "s/d", "prob": "41", "resultado": "fallo"}, {"nombre": "Santos y Fiorentina", "jugadas": ["Santos no pierde (1X)", "Fiorentina no pierde (X2)"], "cuota": "s/d", "prob": "58", "resultado": "fallo"}], "descartes": ["Brentford vs. Everton: fuentes divididas (Rotowire y Mightytips ven empate, Dimers da 40% Brentford, 35% Everton y 25% empate).", "Levante vs. Elche: duelo de descenso muy parejo (Dimers 43% Levante, 33% Elche); las proyecciones van de 1-1 a 0-1.", "LVBP: Cardenales vs. Tiburones (7:00 p. m.) y Lara en La Guaira; sin abridores ni cuotas, y los récords están muy cerca.", "Internacional vs. Vitória, Gimnasia vs. Newell's y ligas menores: sin pronósticos ni cuotas accesibles.", "Resultados de ayer: Hull 2-0 Brighton, Atalanta 4-4 Inter, Liverpool 4-0 Man United y Bravos 8-3 Águilas.", "Resultados reales del 23 nov: Botafogo 1-1 São Paulo y Monza 3-0 Fiorentina."], "fuentes": [{"nombre": "SportyTrader – Santos vs. Grêmio", "url": "https://sportytrader.com/pt-br/palpites/santos-gremio-rs-389154"}, {"nombre": "Tips.gg – Santos vs. Grêmio", "url": "https://tips.gg/article/santos-vs-gremio-24-11-2026/"}, {"nombre": "SportsGambler – Botafogo vs. São Paulo", "url": "https://www.sportsgambler.com/betting-tips/football/botafogo-vs-sao-paulo-prediction-lineups-odds-2026-11-23/"}, {"nombre": "ScoreGPT – Botafogo vs. São Paulo", "url": "https://scoregpt.app/ai-football-predictions/brasileirao/botafogo-vs-sao-paulo-2026-11-23"}, {"nombre": "Statz – Botafogo vs. São Paulo", "url": "https://statz.ai/news/19621728-botafogo-vs-sao-paulo-predictions-betting-tips"}, {"nombre": "Statz – Monza vs. Fiorentina", "url": "https://statz.ai/news/19713501-monza-vs-fiorentina-predictions-betting-tips"}, {"nombre": "SportyTrader – Monza vs. Fiorentina", "url": "https://www.sportytrader.com/en/betting-tips/monza-fiorentina-389216/"}, {"nombre": "Dimers – Brentford vs. Everton", "url": "https://www.dimers.com/epl/news/brentford-vs-everton-prediction-11-23-2026-ac"}, {"nombre": "Squawka – Levante vs. Elche", "url": "https://www.squawka.com/en/news/previews/levante-vs-elche-predictions-tonight-23-11-2026/"}, {"nombre": "ESPN – Hull 2-0 Brighton", "url": "https://www.espn.com/soccer/match/_/gameId/401879234"}, {"nombre": "ESPN – Liverpool 4-0 Man United", "url": "https://www.espn.com/soccer/match/_/gameId/401878755"}, {"nombre": "VAVEL – Atalanta 4-4 Inter", "url": "https://www.vavel.com/en-us/soccer/2026/11/22/1280334-atalanta-vs-inter-milan-live-score-updates-and-commentary-in-serie-a-paramount.html"}]}, {"fecha": "2026-11-22", "actualizado": "22 nov, 9:05 a. m. GMT-4", "resumen": "Domingo con Premier League (Hull-Brighton y Liverpool-Man United) y Serie A (Atalanta-Inter), y tres juegos de la LVBP. No hay selecciones absolutas ni MLB. Varios sitios (Yahoo, Dimers, El Emergente) no abrieron, así que muchas cuotas faltan y los abridores no aparecieron.", "futbol_tag": "Sin selecciones absolutas", "futbol": [], "clubes_tag": "Premier League · Serie A", "clubes": [{"liga": "Premier League", "hora": "9:00 a. m. ET (2:00 p. m. Reino Unido)", "partido": "Hull City vs. Brighton", "jugada": "Brighton no pierde (X2)", "cuota": "s/d", "prob": 80, "razon": "Los modelos dan a Brighton 56-59% y al empate 24%, es decir, unos 80% para X2. Brighton suma 22 puntos con diferencia de +19 en 10 partidos y Hull 11 puntos; Sportytrader lo cuenta invicto en sus últimos tres duelos con Hull. La victoria visitante paga 1.57 (1xbet).", "alternativa": "Brighton gana a 1.57 (1xbet)", "resultado": "fallo", "marcador": "2-0"}, {"liga": "Serie A", "hora": "2:45 p. m. ET (20:45 en Italia)", "partido": "Atalanta vs. Inter", "jugada": "Inter no pierde (X2)", "cuota": "s/d", "prob": 78, "razon": "El mercado daba a Inter ~60%, empate ~21% y Atalanta ~20% (17 nov); otro algoritmo da 57% al triunfo de Inter con 1-3 como marcador. Lo bajé un poco por jugar de visitante en Bergamo y no tener la cuota de X2.", "alternativa": "Inter gana a -164 (BetRivers)", "resultado": "acierto", "marcador": "4-4"}, {"liga": "Premier League", "hora": "11:30 a. m. ET (4:30 p. m. Reino Unido)", "partido": "Liverpool vs. Manchester United", "jugada": "Más de 2.5 goles", "cuota": "s/d", "prob": 64, "razon": "Covers da 66% al over 2.5 y Racing Post recomienda Liverpool y over 2.5. Liverpool juega en casa y lleva 10 puntos más que el United tras 10 jornadas; Pochettino debuta en el banquillo rival con poco tiempo de trabajo.", "alternativa": "Liverpool gana a 3/4 (Ladbrokes), ~57% según Covers", "resultado": "acierto", "marcador": "4-0"}], "clubes_nota": "", "beisbol": [{"liga": "LVBP", "hora": "7:00 p. m. (hora por confirmar)", "partido": "Águilas del Zulia vs. Bravos de Margarita", "jugada": "Gana Águilas", "cuota": "s/d", "prob": 57, "razon": "Águilas vienen de remontar 7-5 a Bravos anoche y llevan cuatro victorias seguidas; juegan en el Luis Aparicio. Bravos van 12-21. No hallé abridores ni cuota, así que la confianza es moderada.", "resultado": "fallo", "marcador": "3-8"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Brighton no pierde (X2)", "Inter no pierde (X2)"], "cuota": "s/d", "prob": "62", "resultado": "fallo"}, {"nombre": "Fútbol clubes", "jugadas": ["Brighton no pierde (X2)", "Inter no pierde (X2)", "Liverpool-Man United más de 2.5 goles"], "cuota": "s/d", "prob": "40", "resultado": "fallo"}, {"nombre": "Fútbol y béisbol", "jugadas": ["Brighton no pierde (X2)", "Gana Águilas"], "cuota": "s/d", "prob": "46", "resultado": "fallo"}], "descartes": ["Napoli vs. Torino: se jugó el sábado 21, no hoy.", "Caribes vs. Tigres y Cardenales vs. Tiburones (LVBP): sin abridores ni cuotas; Tigres 20-11 y Caribes 17-13 es un duelo parejo.", "Sassuolo vs. Genoa: Oddschecker ve ventaja ligera de Genoa, pero sin cuota ni datos suficientes.", "LaLiga, Liga MX y ligas sudamericanas: sin pronósticos de hoy accesibles.", "Resultados de ayer: Tottenham 2-0 Ipswich, Lazio 3-0 Lecce, Newcastle 2-2 Arsenal y Águilas 7-5 Bravos.", "Resultados reales del 22 nov: Hull 2-0 Brighton (dos goles de McBurnie en el descuento, Brighton con 10), Atalanta 4-4 Inter y Liverpool 4-0 Man United."], "fuentes": [{"nombre": "Covers – Liverpool vs. Manchester United", "url": "https://www.covers.com/soccer/liverpool-vs-manchester-united-prediction-picks-nov-22-2026"}, {"nombre": "Racing Post – Liverpool vs. Man Utd", "url": "https://www.racingpost.com/sport/football-tips/premier-league/odds-predictions-betting-tips-team-news-bet-builder-a9WFB7f8YQFI/"}, {"nombre": "Squawka – Liverpool vs. Man Utd", "url": "https://squawka.com/en/news/liverpool-vs-man-utd-bet-builder-tips-today-22-11-2026"}, {"nombre": "SportsGambler – Liverpool vs. Man Utd", "url": "https://www.sportsgambler.com/betting-tips/football/liverpool-vs-manchester-united-prediction-lineups-odds-2026-11-22/"}, {"nombre": "SportyTrader – Hull vs. Brighton", "url": "https://www.sportytrader.com/en/betting-tips/hull-brighton-388215/"}, {"nombre": "PredictZ – Hull vs. Brighton", "url": "https://www.predictz.com/predictions/england/premier-league/1196860/"}, {"nombre": "FootballPredictions.com – Hull vs. Brighton", "url": "https://footballpredictions.com/footballpredictions/premierleaguepredictions/hull-city-vs-brighton-prediction-22-11-2026/"}, {"nombre": "Forebet – Atalanta vs. Inter", "url": "https://www.forebet.com/en/football/matches/atalanta-inter-2496607"}, {"nombre": "Totalis – Serie A y Bundesliga", "url": "https://www.totalis.trade/blogs/prediction-markets/serie-a-bundesliga-predictions-this-weekend"}, {"nombre": "Oddschecker – Sassuolo vs. Genoa", "url": "https://oddschecker.com/us/picks-parlays/soccer/cng201-20261122-sassuolo-vs-genoa-lineups-prediction-betting-picks-odds"}, {"nombre": "Mundour – Resultados LVBP 21 nov", "url": "https://mundour.com/2026/11/22/estos-son-los-resultados-de-la-jornada-del-21nov-en-la-lvbp/"}, {"nombre": "TuJonrón – Calendario LVBP", "url": "https://tujonron.com/calendario"}]}, {"fecha": "2026-11-21", "actualizado": "21 nov, 9:05 a. m. GMT-4", "resumen": "Sábado con jornada completa de la Premier League y Serie A tras la pausa FIFA, y la LVBP con Tigres, líder con ocho victorias seguidas, recibiendo a Caribes. Man City-Fulham ya empezó, así que quedó fuera; varias fuentes (Sportsgambler, Yahoo, Sportsbettingdime) no abrieron, por lo que las cuotas faltan en varias jugadas.", "futbol_tag": "Sin selecciones absolutas", "futbol": [], "clubes_tag": "Premier League · Serie A", "clubes": [{"liga": "Premier League", "hora": "10:00 a. m. ET (3:00 p. m. Reino Unido)", "partido": "Tottenham vs. Ipswich Town", "jugada": "Tottenham no pierde (1X)", "cuota": "s/d", "prob": 80, "razon": "William Hill pagaba 8/15 por la victoria local (~63%) y Squawka proyecta 2-1 o 1-0 para el Tottenham; sumando el empate la probabilidad ronda 80-85%. Riesgo: el modelo de Squawka da solo 46% a la victoria y Ipswich suma 11 puntos contra 12 del Tottenham.", "resultado": "acierto", "marcador": "2-0"}, {"liga": "Serie A", "hora": "Por confirmar", "partido": "Lazio vs. Lecce", "jugada": "Gana Lazio", "cuota": "~1.63", "prob": 60, "razon": "Lazio ganó sus últimos tres partidos como local y Lecce solo una vez en sus últimos siete de Serie A; Football Whispers proyecta 3-1 y avisa de bajas en Lecce. La cuota 1.63 viene de una página sin fecha clara.", "alternativa": "Lazio gana y más de 2.5 goles a 1.88 (Football Whispers)", "resultado": "acierto", "marcador": "3-0"}, {"liga": "Premier League", "hora": "12:30 p. m. ET (5:30 p. m. Reino Unido)", "partido": "Newcastle vs. Arsenal", "jugada": "Menos de 3.5 goles", "cuota": "s/d", "prob": 82, "razon": "Cinco de los últimos seis duelos terminaron con menos de 2.5 goles y SoccerNews da el under 2.5 a 1.23 en fracción (2.23 decimal) con 1-0 para Arsenal. El under 3.5 es una línea mucho más segura; no hallé su cuota.", "resultado": "fallo", "marcador": "2-2"}], "clubes_nota": "", "beisbol": [{"liga": "LVBP", "hora": "4:00 p. m.", "partido": "Tigres de Aragua vs. Caribes de Anzoátegui", "jugada": "Gana Tigres", "cuota": "s/d", "prob": 58, "razon": "Tigres son líderes con 19-11, vienen de ocho victorias seguidas (anoche 12-11 sobre Bravos) y juegan en Maracay. Los abridores no están claros: una vista previa menciona a Harol González, Ronnie Williams, Junior Guerra y Yonny Chirinos sin indicar de quién es cada uno. Sin cuota localizada.", "resultado": "acierto", "marcador": "14-13 (10 ent.)"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Tottenham no pierde (1X)", "Newcastle-Arsenal menos de 3.5 goles"], "cuota": "s/d", "prob": "66", "resultado": "fallo"}, {"nombre": "Fútbol clubes", "jugadas": ["Tottenham no pierde (1X)", "Gana Lazio", "Newcastle-Arsenal menos de 3.5 goles"], "cuota": "s/d", "prob": "39", "resultado": "fallo"}, {"nombre": "Fútbol y béisbol", "jugadas": ["Tottenham no pierde (1X)", "Gana Tigres"], "cuota": "s/d", "prob": "46", "resultado": "acierto"}], "descartes": ["Man City vs. Fulham: favorito claro (~70%, -233) pero empezó a las 7:30 a. m. ET, antes de esta actualización.", "Chelsea vs. Leeds: parejo (Chelsea 1.91 a 2.0), con 1-1 y 1-0 como proyecciones.", "Juventus vs. Venezia: las fuentes lo ubican el domingo 22, no hoy.", "Frankfurt vs. Hoffenheim y Betis (LaLiga): sin cuotas ni previas de hoy accesibles.", "Ligas sudamericanas y Liga MX: sin cuotas ni pronósticos hallados.", "Resultados de ayer: Bayern 1-1 Colonia, Athletic 0-1 Espanyol y Tigres 12-11 Bravos.", "Resultado confirmado: Tigres 14-13 Caribes en 10 entradas."], "fuentes": [{"nombre": "Football Whispers – Lazio vs. Lecce", "url": "https://footballwhispers.com/blog/lazio-vs-lecce-prediction-21-11-2026/"}, {"nombre": "Football Whispers – Tottenham vs. Ipswich", "url": "https://footballwhispers.com/blog/tottenham-vs-ipswich-town-prediction-21-11-2026/"}, {"nombre": "Squawka – Tottenham vs. Ipswich", "url": "https://www.squawka.com/en/bet/football-tips/preview/tottenham-vs-ipswich-premier-league/"}, {"nombre": "SoccerNews – Newcastle vs. Arsenal", "url": "https://www.soccernews.com/prediction-newcastle-vs-arsenal/408328/"}, {"nombre": "SoccerNews – Juventus vs. Venezia", "url": "https://www.soccernews.com/prediction-juventus-vs-venezia/408659/"}, {"nombre": "Scores24 – Man City vs. Fulham", "url": "https://scores24.live/en/soccer/m-21-11-2026-manchester-city-fulham-prediction"}, {"nombre": "Dimers – Man City vs. Fulham", "url": "https://www.dimers.com/epl/news/manchester-city-vs-fulham-prediction-11-21-2026-ac"}, {"nombre": "Yahoo Sports – Chelsea vs. Leeds", "url": "https://sports.yahoo.com/articles/chelsea-vs-leeds-prediction-pick-030111879.html"}, {"nombre": "Sportsbettingdime – Premier League 21 nov", "url": "https://sportsbettingdime.com/news/soccer/epl-picks-saturday-nov-21-2026"}, {"nombre": "El Nacional – Tigres 12-11 Bravos", "url": "https://www.elnacional.com/2026/11/tigres-vino-de-atras-ante-bravos-y-sumo-su-octava-victoria-consecutiva-para-mantener-el-liderato-de-la-lvbp/"}, {"nombre": "La Prensa de Monagas – Calendario LVBP 21 nov", "url": "https://laprensademonagas.com/calendario-lvbp-estos-son-los-juegos-y-horarios-para-la-jornada-de-este-sabado-21-de-noviembre/"}, {"nombre": "El Estímulo – LVBP horarios", "url": "https://elestimulo.com/deportes/2026-11-18/lvbp-2026-2027-hora-tv/"}]}, {"fecha": "2026-11-20", "actualizado": "20 nov, 9:05 a. m. GMT-4", "resumen": "Vuelven las grandes ligas tras la fecha FIFA con Bayern-Colonia en la Bundesliga y Athletic-Espanyol en LaLiga; la LVBP sigue con Tigres, líder tras ganar anoche, recibiendo a Bravos. No hay selecciones de primer nivel ni MLB, y las cuotas de béisbol no aparecieron.", "futbol_tag": "Sin selecciones absolutas", "futbol": [], "clubes_tag": "Bundesliga · LaLiga", "clubes": [{"liga": "Bundesliga", "hora": "2:30 p. m. ET (hora por confirmar)", "partido": "Bayern Múnich vs. Colonia", "jugada": "Gana Bayern Múnich", "cuota": "1.09", "prob": 88, "razon": "Las casas lo ponen entre 85% y 92% (22bet 1.09; Polymarket 92%; Statz 85%). Bayern suma 21 puntos contra 9 de Colonia, que es 15.º tras nueve partidos. Los modelos proyectan 3-0, 3-1 y 4-1.", "alternativa": "Más de 1.5 goles en el partido (todas las proyecciones dan 3 goles o más)", "resultado": "fallo", "marcador": "1-1"}, {"liga": "LaLiga", "hora": "3:00 p. m. ET (21:00 hora de España)", "partido": "Athletic Club vs. Espanyol", "jugada": "Athletic Club no pierde (1X)", "cuota": "s/d", "prob": 80, "razon": "Statz da 58% a Athletic, 25% al empate y 17% a Espanyol (83% para 1X); la victoria local ronda 1.50 en las casas (~62%). Juega en San Mamés y la proyección más común es 1-0. Lo bajé un poco por no tener la cuota de 1X.", "resultado": "fallo", "marcador": "0-1"}, {"liga": "Bundesliga", "hora": "2:30 p. m. ET (hora por confirmar)", "partido": "Bayern Múnich vs. Colonia", "jugada": "Más de 1.5 goles", "cuota": "s/d", "prob": 85, "razon": "Statz proyecta 3-0, Goal.com 3-1 y SportsGambler 4-1; ninguna fuente proyecta menos de 3 goles. Statz da 55% a que ambos anoten. Lo bajé por no tener la cuota del mercado.", "resultado": "acierto", "marcador": "1-1"}], "clubes_nota": "", "beisbol": [{"liga": "LVBP", "hora": "Noche (hora por confirmar)", "partido": "Tigres de Aragua vs. Bravos de Margarita", "jugada": "Gana Tigres", "cuota": "s/d", "prob": 58, "razon": "Tigres subieron al primer lugar anoche al vencer 8-6 a Bravos y repiten la serie hoy en Maracay. No encontré abridores, récords actualizados ni cuota, así que la confianza es moderada.", "resultado": "acierto", "marcador": "12-11"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Gana Bayern Múnich", "Athletic Club no pierde (1X)"], "cuota": "s/d", "prob": "70", "resultado": "fallo"}, {"nombre": "Bayern y béisbol", "jugadas": ["Gana Bayern Múnich", "Gana Tigres"], "cuota": "s/d", "prob": "51", "resultado": "fallo"}, {"nombre": "Triple", "jugadas": ["Gana Bayern Múnich", "Athletic Club no pierde (1X)", "Gana Tigres"], "cuota": "s/d", "prob": "41", "resultado": "fallo"}], "descartes": ["Vélez vs. Belgrano (Argentina): las fuentes lo ubican el 21 o 22 de noviembre, no hoy.", "Puebla vs. Atlético San Luis y Tijuana vs. Atlante (Liga MX): sin cuotas ni modelos accesibles.", "Medellín vs. Santa Fe, Cerro vs. Nacional y otros de Colombia y Uruguay: sin cuotas ni pronósticos hallados.", "Resto de la LVBP del viernes: no encontré abridores ni cuotas; solo hay datos de la serie Tigres-Bravos.", "Resultados de ayer: Vasco 2-1 Inter, Vitória 2-1 Bragantino; en la LVBP, Tigres 8-6 Bravos, Águilas 2-1 Tiburones y Cardenales 4-3 Caribes (10 entradas)."], "fuentes": [{"nombre": "Goal.com – Bayern vs. Colonia", "url": "https://www.goal.com/en-ng/betting/tips/bayern-munich-vs-koln-predictions-20-11-2026/A%3Abltd4767557b1ba082a"}, {"nombre": "Statz – Bayern vs. Colonia", "url": "https://statz.ai/news/19735116-bayern-vs-koln-predictions-betting-tips"}, {"nombre": "SportsGambler – Bayern vs. Colonia", "url": "https://www.sportsgambler.com/betting-tips/football/bayern-munich-vs-fc-koln-prediction-lineups-odds-2026-11-20/"}, {"nombre": "Polymarket – Bayern vs. Colonia", "url": "https://polymarket.com/sports/bundesliga/bun-bay-koe-2026-11-20"}, {"nombre": "Statz – Athletic vs. Espanyol", "url": "https://statz.ai/news/19732621-athletic-club-vs-espanyol-predictions-betting-tips"}, {"nombre": "bet365 News – Athletic vs. Espanyol", "url": "https://news.bet365.com/en-gb/article/football-athletic-club-espanyol-prediction-and-tips/2026111810485126731"}, {"nombre": "The Football Faithful – Athletic vs. Espanyol", "url": "https://thefootballfaithful.com/athletic-club-vs-espanyol-prediction-betting-tips-20-11-2026/"}, {"nombre": "Meridiano – Tigres vs. Bravos", "url": "https://meridiano.net/beisbol/beisbol-venezolano/lvbp-los-tigres-de-aragua-vienen-de-atras-en-maracay-para-quedarse-con-la-cima-del-campeonato-202611192220/amp"}, {"nombre": "La República – Partidos de hoy 20 nov", "url": "https://larepublica.pe/deportes/2026/11/19/partidos-de-hoy-viernes-20-de-noviembre-horarios-y-canales-para-ver-futbol-en-vivo-410153"}]}, {"fecha": "2026-11-19", "actualizado": "19 nov, 9:30 a. m. GMT-4", "resumen": "Vuelve el Brasileirão tras la fecha FIFA con tres juegos de la fecha 35 y la LVBP tiene tres juegos esta noche. No hay selecciones de primer nivel ni MLB; las cuotas y los abridores no aparecieron en las fuentes accesibles, así que las probabilidades salen de modelos públicos.", "futbol_tag": "Sin selecciones absolutas", "futbol": [], "clubes_tag": "Brasileirão · Fecha 35", "clubes": [{"liga": "Brasileirão", "hora": "7:30 p. m. (Brasil)", "partido": "Vasco vs. Internacional", "jugada": "Vasco no pierde (1X)", "cuota": "s/d", "prob": 70, "razon": "El simulador de Stoccer da 58% a Vasco, 24% al empate y 18% a Inter (82% para 1X); lo bajé por tener una sola fuente. Vasco juega de local y el simulador proyecta 2-0.", "resultado": "acierto", "marcador": "2-1"}, {"liga": "Brasileirão", "hora": "7:30 p. m. (Brasil)", "partido": "Vitória vs. RB Bragantino", "jugada": "Bragantino no pierde (X2)", "cuota": "s/d", "prob": 64, "razon": "Partido parejo: ValorFinal da 36.9% a Bragantino y 25.8% al empate; Foresportia, 36.2% y 30%. Ambos modelos suman entre 63% y 66% para X2.", "resultado": "fallo", "marcador": "2-1"}], "clubes_nota": "", "beisbol": [{"liga": "LVBP", "hora": "7:00 p. m.", "partido": "Bravos de Margarita vs. Tigres de Aragua", "jugada": "Gana Tigres", "cuota": "s/d", "prob": 60, "razon": "Tigres 17-11 y segundos de la tabla; Bravos 12-17 y séptimos, según La Iguana al 18 nov. Juegan en Maracay. Sin abridores ni cuota localizados.", "resultado": "acierto", "marcador": "8-6"}, {"liga": "LVBP", "hora": "7:00 p. m.", "partido": "Tiburones de La Guaira vs. Águilas del Zulia", "jugada": "Gana Tiburones", "cuota": "s/d", "prob": 56, "razon": "Águilas son últimas (9-21) y Tiburones 13-15 según La Iguana. Riesgo: Águilas vienen de ganar 11-4 y juegan en casa. Sin abridores ni cuota.", "resultado": "fallo", "marcador": "1-2"}, {"liga": "LVBP", "hora": "7:00 p. m.", "partido": "Caribes de Anzoátegui vs. Cardenales de Lara", "jugada": "Gana Caribes", "cuota": "s/d", "prob": 54, "razon": "Caribes lideran con 17-9, pero juegan de visitante en Barquisimeto y vienen de perder con Águilas. Es la jugada de menor confianza.", "resultado": "fallo", "marcador": "3-4"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Vasco no pierde (1X)", "Gana Tigres"], "cuota": "s/d", "prob": "42", "resultado": "acierto"}, {"nombre": "Brasileirão", "jugadas": ["Vasco no pierde (1X)", "Bragantino no pierde (X2)"], "cuota": "s/d", "prob": "45", "resultado": "fallo"}, {"nombre": "Béisbol", "jugadas": ["Gana Tigres", "Gana Tiburones"], "cuota": "s/d", "prob": "34", "resultado": "fallo"}], "descartes": ["São Paulo vs. Fluminense: Stoccer da 37% a Fluminense, 35% a São Paulo y 28% empate; demasiado parejo.", "Peñarol vs. Cerro Largo (Uruguay): solo hallé datos de otros partidos, sin cuotas de hoy.", "Corinthians vs. Botafogo: se jugó anoche (hora de Brasil), no es de hoy.", "Resultado de ayer en béisbol: Águilas 11, Caribes 4 según cabifinde.com; no pude confirmarlo en una segunda fuente."], "fuentes": [{"nombre": "Stoccer – Simulador Brasileirão 2026", "url": "https://www.playstoccer.com/simulador-brasileirao"}, {"nombre": "ValorFinal – Vitória vs. Bragantino", "url": "https://valorfinal.com.br/brasileirao/jogos/vitoria-x-bragantino"}, {"nombre": "Foresportia – Vitória vs. Bragantino", "url": "https://www.foresportia.com/en/prediction/brasileirao/esporte-clube-vitoria-red-bull-bragantino-2026-11-19/"}, {"nombre": "El Comercio – Partidos de hoy 19 nov", "url": "https://elcomercio.pe/deporte-total/futbol-mundial/partidos-de-hoy-jueves-19-de-noviembre-del-2026-a-que-hora-juegan-y-en-que-canales-ver-futbol-en-vivo-online-gratis-noticia/"}, {"nombre": "La Iguana – Tabla LVBP", "url": "https://www.laiguana.tv/articulos/1639591-tabla-de-posiciones-de-la-lvbp-3/"}, {"nombre": "El Emergente – LVBP 19 nov", "url": "https://elemergente.com/2026/11/asi-va-la-lvbp-resultados-del-miercoles-posiciones-transmisiones-de-tv-y-pitchers-para-este-jueves-19-de-noviembre-2026.html"}, {"nombre": "Cabifinde – LVBP hoy", "url": "https://cabifinde.com/lvbp/"}, {"nombre": "BNews – Cruzeiro 2-1 Palmeiras", "url": "https://www.bnewssaopaulo.com.br/noticias/esportes/brasileiro-cruzeiro-vira-e-palmeiras-ve-flamengo-perto-do-titulo.html"}]}, {"fecha": "2026-11-18", "actualizado": "18 nov, 9:30 a. m. GMT-4", "resumen": "Cierra la fase de liga de la Nations League y las grandes ligas europeas siguen en pausa por la fecha FIFA; hoy hay Brasileirão con Flamengo y Cruzeiro-Palmeiras, y béisbol invernal en la LVBP. No confirmé fecha ni cuotas fiables de amistosos de selecciones, así que esa sección queda vacía.", "futbol_tag": "Amistosos internacionales", "futbol": [], "clubes_tag": "Brasileirão", "clubes": [{"liga": "Brasileirão", "hora": "Hoy (hora por confirmar)", "partido": "Flamengo vs. Athletico-PR", "jugada": "Gana Flamengo", "cuota": "1.23", "prob": 76, "razon": "Cuotas entre 1.22 y 1.25 (promedio ~76%); el modelo de Statz da 73% a Flamengo. Footballwhispers lo ubica líder con 76 puntos y Athletico, quinto, sin Kevin Viveros, su máximo goleador.", "alternativa": "Menos de 2.5 goles a 2.63 (cuatro de los últimos cinco duelos con 2 goles o menos)", "resultado": "acierto", "marcador": "2-1"}, {"liga": "Brasileirão", "hora": "Hoy (hora por confirmar)", "partido": "Cruzeiro vs. Palmeiras", "jugada": "Cruzeiro no pierde (1X)", "cuota": "s/d", "prob": 62, "razon": "Duelo parejo: la simulación de OddAlerts da 36.1% a Cruzeiro y 28.3% al empate (~64% juntos), y SportyTrader recomienda Cruzeiro o empate. Statz proyecta 1-1.", "resultado": "acierto", "marcador": "2-1"}], "clubes_nota": "", "beisbol": [{"liga": "LVBP", "hora": "1:00 p. m.", "partido": "Caribes de Anzoátegui vs. Águilas del Zulia", "jugada": "Gana Caribes", "cuota": "s/d", "prob": 58, "razon": "Según los datos del 15 nov, Caribes iba 16-8 y 9-5 en casa, y Águilas 9-19 con 4-10 de visitante. Sin abridores confirmados ni cuota localizada.", "resultado": "fallo", "marcador": "4-11"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Gana Flamengo", "Cruzeiro no pierde (1X)"], "cuota": "s/d", "prob": "47", "resultado": "acierto"}, {"nombre": "Brasil y béisbol", "jugadas": ["Gana Flamengo", "Gana Caribes"], "cuota": "s/d", "prob": "44", "resultado": "fallo"}], "descartes": ["Ecuador vs. Bolivia y Chile vs. Colombia (amistosos): las fuentes no coinciden en la fecha (17 o 18 nov) y podrían haber empezado ya.", "Cardenales de Lara vs. Magallanes (LVBP, 7:00 p. m.): récords casi iguales (13-13 y 13-14) y sin abridores ni cuota.", "Resultados de ayer en béisbol: Magallanes ganó en Caracas en 10 entradas."], "fuentes": [{"nombre": "Footballwhispers – Flamengo vs. Athletico-PR", "url": "https://footballwhispers.com/blog/flamengo-vs-athletico-paranaense-prediction-18-11-2026/"}, {"nombre": "Statz – Flamengo vs. Athletico-PR", "url": "https://statz.ai/news/19621739-flamengo-vs-athletico-pr-predictions-betting-tips"}, {"nombre": "SportsGambler – Flamengo vs. Athletico-PR", "url": "https://www.sportsgambler.com/betting-tips/football/flamengo-vs-athletico-paranaense-prediction-lineups-odds-2026-11-18/"}, {"nombre": "SportyTrader – Cruzeiro vs. Palmeiras", "url": "https://www.sportytrader.com/en/betting-tips/cruzeiro-palmeiras-388028/"}, {"nombre": "OddAlerts – Cruzeiro vs. Palmeiras", "url": "https://www.oddalerts.com/simulations/cruzeiro-vs-palmeiras-prediction/420493537"}, {"nombre": "MightyTips – Cruzeiro vs. Palmeiras", "url": "https://www.mightytips.com/football-predictions/cruzeiro-vs-palmeiras-prediction-18-11-2026/"}, {"nombre": "BeisbolPlay – Calendario LVBP", "url": "https://www.beisbolplay.com/calendario-lvbp-2026-2027"}, {"nombre": "El Estímulo – LVBP", "url": "https://elestimulo.com/deportes/2026-11-17/lvbp-2026-2027-hora-tv/"}]}, {"fecha": "2026-11-17", "actualizado": "17 nov, 9:30 a. m. GMT-4", "resumen": "Última jornada de la fase de liga de la Nations League con Dinamarca-Noruega y Gales-Portugal en Europa; las ligas de clubes siguen en pausa por la fecha FIFA. En béisbol invernal no logré confirmar abridores ni cuotas, así que no hay jugadas.", "futbol_tag": "Nations League UEFA", "futbol": [{"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "Gales vs. Portugal", "jugada": "Gana Portugal", "cuota": "1.45", "prob": 68, "razon": "Portugal ya está en cuartos y le basta el empate para ser primero de grupo. Las casas lo ponen entre -235 y -263 (~70%). Sin Cristiano Ronaldo, Squawka y William Hill proyectan 0-2.", "alternativa": "Portugal gana sin recibir gol a 6/4 (bet365, Squawka)", "resultado": "acierto", "marcador": "2-3"}, {"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "Dinamarca vs. Noruega", "jugada": "Más de 1.5 goles", "cuota": "s/d", "prob": 76, "razon": "Squawka y TNT dicen 2-1, Rotowire 3-2 y otro modelo 2-2; ninguno proyecta menos de 3 goles. Noruega necesita ganar y Dinamarca viene de golear 4-1 a Portugal con doblete de Højlund.", "resultado": "acierto", "marcador": "2-3"}, {"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "Dinamarca vs. Noruega", "jugada": "Dinamarca no pierde (1X)", "cuota": "s/d", "prob": 64, "razon": "Con la victoria de Dinamarca en ~+130 a +137 y el empate en +270 a +280, la probabilidad combinada ronda 64% tras quitar el margen. A Dinamarca le basta el empate. Duda: Joachim Andersen está en vigilancia por un golpe de ligamento.", "resultado": "fallo", "marcador": "2-3"}], "clubes_tag": "Fecha FIFA", "clubes": [], "clubes_nota": "Fecha FIFA: las grandes ligas de clubes están en pausa hasta el fin de semana del 21-22 de noviembre. No encontré partidos de primera división con cuotas o datos suficientes para hoy.", "beisbol": [], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Portugal gana", "Dinamarca-Noruega más de 1.5 goles"], "cuota": "s/d", "prob": "52", "resultado": "acierto"}, {"nombre": "Selecciones", "jugadas": ["Portugal gana", "Dinamarca no pierde (1X)"], "cuota": "s/d", "prob": "44", "resultado": "fallo"}], "descartes": ["LVBP (martes): no confirmé abridores ni cuotas; el calendario apunta a Magallanes en Caracas, pero sin datos suficientes.", "LIDOM y LMP: sin programación, abridores ni cuotas verificables para hoy.", "Resultados de ayer en béisbol: Caracas 6, Lara 5 según El Emergente."], "fuentes": [{"nombre": "Squawka – Dinamarca vs. Noruega", "url": "https://www.squawka.com/en/news/previews/denmark-vs-norway-predictions-tonight-17-11-2026/"}, {"nombre": "TNT Sports – Dinamarca vs. Noruega", "url": "https://www.tntsports.co.uk/betting/tips/denmark-vs-norway-prediction-tips-and-odds-17-11-26/"}, {"nombre": "Rotowire – Dinamarca vs. Noruega", "url": "https://www.rotowire.com/soccer/article/denmark-vs-norway-prediction-predicted-lineups-team-news-146681"}, {"nombre": "FootballPredictions.com – Dinamarca vs. Noruega", "url": "https://footballpredictions.com/footballpredictions/nations-league-predictions/denmark-vs-norway-prediction-17-11-2026/"}, {"nombre": "Squawka – Gales vs. Portugal", "url": "https://www.squawka.com/en/news/previews/wales-vs-portugal-predictions-tonight-17-11-2026/"}, {"nombre": "William Hill – Gales vs. Portugal", "url": "https://news.williamhill.com/football/wales-vs-portugal-prediction-nations-league-tips-26-27/"}, {"nombre": "SportsGambler – Gales vs. Portugal", "url": "https://www.sportsgambler.com/betting-tips/football/wales-vs-portugal-prediction-lineups-odds-2026-11-17/"}, {"nombre": "ATS.io – Gales vs. Portugal", "url": "https://ats.io/soccer/wales-vs-portugal-prediction-11-17-26/"}, {"nombre": "Yahoo Sports – Resultados Nations League", "url": "https://sports.yahoo.com/articles/uefa-nations-league-karetsas-greece-225400488.html"}]}, {"fecha": "2026-11-16", "actualizado": "16 nov, 9:30 a. m. GMT-4", "resumen": "Cierre de la Nations League con Grecia, Suiza y Alemania-Países Bajos en el radar; las ligas de clubes siguen en pausa por la fecha FIFA. En béisbol invernal hay jornada de LVBP con Cardenales visitando a Leones.", "futbol_tag": "Nations League UEFA", "futbol": [{"liga": "Nations League", "hora": "Tarde (Europa)", "partido": "Grecia vs. Serbia", "jugada": "Gana Grecia", "cuota": "1.45", "prob": 66, "razon": "Serbia llega sin puntos en 5 partidos, ya descendida y sin Vlahović por sanción. Grecia necesita ganar para los cuartos y ganó la ida 2-1. Cuotas entre 1.40 y 1.47.", "alternativa": "Grecia -1 de hándicap a ~1.65", "resultado": "acierto", "marcador": "1-0"}, {"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "Alemania vs. Países Bajos", "jugada": "Menos de 3.5 goles", "cuota": "s/d", "prob": 58, "razon": "Covers da 55% al under 3.5 y los modelos proyectan 1-1, 2-1 y 2-2. Países Bajos no ha perdido y Alemania pesa apenas 43.5% en Opta.", "alternativa": "Países Bajos doble oportunidad (X2) según Covers", "resultado": "fallo", "marcador": "5-0"}, {"liga": "Nations League", "hora": "Tarde (Europa)", "partido": "Suiza vs. Escocia", "jugada": "Gana Suiza", "cuota": "1.75 (-133)", "prob": 56, "razon": "Suiza ganó 3-0 la ida y es favorita en las casas (Paddy Power 4/6). Riesgo: ya aseguró el primer lugar de grupo y podría rotar.", "resultado": "acierto", "marcador": "4-0"}], "clubes_tag": "Fecha FIFA", "clubes": [], "clubes_nota": "Fecha FIFA: las grandes ligas de clubes están en pausa hasta el fin de semana del 21-22 de noviembre. No encontré partidos de primera división con cuotas o datos suficientes para hoy.", "beisbol": [{"liga": "LVBP", "hora": "7:00 p. m.", "partido": "Leones del Caracas vs. Cardenales de Lara", "jugada": "Gana Leones", "cuota": "s/d", "prob": 55, "razon": "Leones juegan en casa (Monumental) y vienen de ganar 9-0 a Águilas. Abridor probable: Connor Van Skoyoc, sin confirmación oficial. Cuota no localizada.", "resultado": "acierto", "marcador": "6-5"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Selecciones", "jugadas": ["Grecia gana", "Suiza gana"], "cuota": "~2.54", "prob": "37", "resultado": "acierto"}, {"nombre": "Conservador", "jugadas": ["Grecia gana", "Alemania-Países Bajos menos de 3.5 goles"], "cuota": "s/d", "prob": "38", "resultado": "fallo"}], "descartes": ["Dinamarca vs. Noruega y Gales vs. Portugal: las fuentes los ubican el 17 de noviembre, no hoy.", "LMP (Guasave vs. Mexicali): sin programación ni abridores confirmados para hoy.", "LIDOM: no confirmé juegos hoy ni abridores."], "fuentes": [{"nombre": "Covers – Alemania vs. Países Bajos", "url": "https://www.covers.com/soccer/germany-vs-netherlands-prediction-picks-nov-16-2026"}, {"nombre": "SportsBettingDime – Nations League 16 nov", "url": "https://www.sportsbettingdime.com/news/soccer/uefa-nations-league-picks-today-nov-16-2026/"}, {"nombre": "Squawka – Grecia vs. Serbia", "url": "https://www.squawka.com/en/news/previews/greece-vs-serbia-predictions-betting-tips-16-11-26/"}, {"nombre": "SportsGambler – Alemania vs. Países Bajos", "url": "https://www.sportsgambler.com/betting-tips/football/germany-vs-netherlands-prediction-lineups-odds-2026-11-16/"}, {"nombre": "Rotowire – Alemania vs. Países Bajos", "url": "https://www.rotowire.com/soccer/article/germany-vs-netherlands-prediction-predicted-lineups-team-news-146661"}, {"nombre": "Sporting Life – Suiza vs. Escocia", "url": "https://www.sportinglife.com/football/news/switzerland-vs-scotland-tips-predictions-and-nations-league-preview/235457"}, {"nombre": "El Emergente – LVBP", "url": "https://elemergente.com/2026/11/asi-va-la-lvbp-resultados-del-domingo-posiciones-transmisiones-de-tv-y-pitchers-para-este-lunes-16-de-noviembre-2026.html"}]}, {"fecha": "2026-11-15", "actualizado": "15 nov, 1:30 p. m. ET", "resumen": "Fecha FIFA: cierre de la fase de grupos de la Nations League de la UEFA y béisbol invernal en Venezuela, Dominicana y México. Las grandes ligas de clubes y la MLB están en pausa.", "futbol_tag": "Nations League UEFA", "futbol": [{"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "Francia vs. Turquía", "jugada": "Gana Francia", "cuota": "1.18–1.22", "prob": 81, "razon": "Turquía perdió sus 5 partidos (5 GF, 13 GC). Las cinco fuentes coinciden: Yahoo 3-0, FootballPredictions 3-1, SBD Francia -1.5.", "alternativa": "Para más cuota: Francia -1.5 a ~1.64", "resultado": "acierto", "marcador": "2-1"}, {"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "Croacia vs. Chequia", "jugada": "Gana Croacia", "cuota": "1.45–1.59", "prob": 64, "razon": "Chequia perdió sus 5 partidos (2 GF, 12 GC) y cayó 2-1 ante Croacia en septiembre. Riesgo: Croacia viene de 4 derrotas seguidas.", "alternativa": "Croacia 1X (gana o empata) a ~1.15", "resultado": "acierto", "marcador": "2-1"}, {"liga": "Nations League", "hora": "2:45 p. m. ET", "partido": "España vs. Inglaterra", "jugada": "Más de 2.5 goles", "cuota": "~1.64", "prob": 61, "razon": "España lleva 14 goles en 5 partidos e Inglaterra 16. La ida terminó 3-2 con 4.86 xG. Bajas defensivas: Guehi y James (ING), Rodri (ESP).", "alternativa": "Más de 1.5 goles a ~1.25", "resultado": "acierto", "marcador": "2-3"}], "clubes_tag": "Fecha FIFA", "clubes": [], "clubes_nota": "Fecha FIFA: Premier League, LaLiga, Serie A, Bundesliga y Ligue 1 vuelven el fin de semana del 21-22 de noviembre. Hoy solo juegan ligas menores (Uruguay, Perú, Guatemala, El Salvador) sin cuotas ni datos suficientes para un pronóstico confiable.", "beisbol": [{"liga": "LVBP", "hora": "7:00 p. m.", "partido": "Caribes de Anzoátegui vs. Cardenales de Lara", "jugada": "Gana Caribes", "cuota": "1.52 (-192)", "prob": 60, "razon": "Caribes 16-8 y 9-5 en casa. Cardenales 5-8 como visitante.", "resultado": "fallo", "marcador": "1-11"}, {"liga": "LVBP", "hora": "4:00 p. m.", "partido": "Leones del Caracas vs. Águilas del Zulia", "jugada": "Gana Leones", "cuota": "1.69 (-145)", "prob": 57, "razon": "Águilas tienen el peor récord (9-19) y van 4-10 de visitantes. Leones 15-11.", "resultado": "acierto", "marcador": "9-0"}, {"liga": "LMP", "hora": "Noche", "partido": "Algodoneros de Guasave vs. Águilas de Mexicali", "jugada": "Gana Mexicali", "cuota": "~1.72", "prob": 55, "razon": "Solo la respalda el modelo automático de Scores24. Es la de menor confianza del día.", "resultado": "acierto", "marcador": "1-10"}], "mlb": {"picks": [], "nota": "La temporada 2026 terminó con la Serie Mundial. La sección se activará con el Spring Training y el Opening Day 2027."}, "parleys": [{"nombre": "Conservador", "jugadas": ["Francia gana", "Croacia 1X", "España-Inglaterra más de 1.5 goles"], "cuota": "~1.70", "prob": "55", "resultado": "acierto"}, {"nombre": "Fútbol principal", "jugadas": ["Francia gana", "Croacia gana", "España-Inglaterra más de 2.5 goles"], "cuota": "2.8–3.1", "prob": "33", "resultado": "acierto"}, {"nombre": "Béisbol", "jugadas": ["Caribes gana", "Leones gana"], "cuota": "~2.57", "prob": "33", "resultado": "fallo"}], "descartes": ["Bélgica vs. Italia: demasiado parejo, las fuentes van del 1-1 al 1-2.", "Escogido vs. Licey (LIDOM): duelo 1.º contra 2.º (15-8 vs. 14-9) sin abridores anunciados.", "Defensor Sporting vs. Peñarol (Uruguay): sin cuotas ni tabla actualizada disponibles."], "fuentes": [{"nombre": "Covers – España vs. Inglaterra", "url": "https://www.covers.com/soccer/spain-vs-england-prediction-picks-nov-15-2026"}, {"nombre": "SportsBettingDime – Nations League", "url": "https://www.sportsbettingdime.com/news/soccer/uefa-nations-league-picks-best-bets-nov-15-2026/"}, {"nombre": "Yahoo Sports – Predicciones", "url": "https://sports.yahoo.com/articles/uefa-nations-league-predictions-including-114937763.html"}, {"nombre": "FootballPredictions.com", "url": "https://footballpredictions.com/footballpredictions/"}, {"nombre": "Winner364 – Cuotas", "url": "https://winner364.com/soccer-predictions/2026-11-15/"}, {"nombre": "ParleyCenter – LVBP", "url": "https://parleycenter.com/beisbol-venezuela.php"}, {"nombre": "Scores24 – LMP", "url": "https://scores24.live/es/baseball/l-liga-mexicana-del-pacifico-1/predictions"}, {"nombre": "365Scores – Partidos de hoy en Sudamérica", "url": "https://www.365scores.com/es/news/partidos-hoy-definiciones-sudamerica/"}]}]
+</script>
+<script src="flags.js"></script>
+<script src="crests.js"></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const safeUrl = (u) => (/^https:\/\//i.test(String(u || "")) ? String(u) : null);
+  const icon = (id, cls) => `<svg class="ico${cls ? " " + cls : ""}" aria-hidden="true"><use href="#${id}"/></svg>`;
+  const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  const DIAS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+  const parts = (iso) => { const [y, m, d] = String(iso).split("-").map(Number); return y ? { y, m, d, w: new Date(Date.UTC(y, m - 1, d)).getUTCDay() } : null; };
+  const conf = (p) => (p >= 70 ? "alta" : p >= 55 ? "media" : "baja");
+  // Riesgo: la rutina lo declara en p.riesgo; si falta, se deduce de la probabilidad y de si hay cuota real.
+  const RIESGO = { bajo: "Riesgo bajo", medio: "Riesgo medio", alto: "Riesgo alto" };
+  const sinCuota = (c) => !c || /s\/d|n\/d|—/i.test(String(c));
+  const riesgoDe = (p, prob) => (RIESGO[p.riesgo] ? p.riesgo : prob < 60 ? "alto" : prob >= 72 && !sinCuota(p.cuota) ? "bajo" : "medio");
+  const riesgoParley = (t) => (RIESGO[t.riesgo] ? t.riesgo : Number(t.prob) < 45 || (t.jugadas || []).length > 2 ? "alto" : Number(t.prob) < 60 ? "medio" : "bajo");
+  const avisoHtml = (txt) => `<div class="risk">${icon("i-alert")}<span><b>Advertencia:</b> ${esc(txt)}</span></div>`;
+  const CONF_ICON = { alta: "i-flame", media: "i-gauge", baja: "i-alert" };
+  const RES = { acierto: ["Acierto", "i-check"], fallo: ["Fallo", "i-x"], nulo: ["Nulo", "i-ban"], pendiente: ["Pendiente", "i-clock"] };
+  const SECCIONES = [
+    { key: "futbol", id: "selecciones", titulo: "Fútbol · Selecciones", corto: "Selecciones", icon: "i-ball", color: "var(--sel)", tag: (j) => j.futbol_tag || "Internacional", vacio: () => "No hay partidos de selecciones con ventaja estadística clara este día." },
+    { key: "clubes", id: "clubes", titulo: "Fútbol · Clubes", corto: "Clubes", icon: "i-shield", color: "var(--club)", tag: (j) => j.clubes_tag || "Primera división", vacio: (j) => j.clubes_nota || "No hay partidos de primera división con ventaja estadística clara este día." },
+    { key: "beisbol", id: "beisbol", titulo: "Béisbol invernal", corto: "Béisbol", icon: "i-baseball", color: "var(--base)", tag: () => "LVBP · LIDOM · LMP", vacio: () => "No hubo juegos de béisbol invernal con datos suficientes este día." },
+    { key: "mlb", id: "mlb", titulo: "MLB", corto: "MLB", icon: "i-diamond", color: "var(--mlb)", tag: (j) => (j.mlb && j.mlb.picks && j.mlb.picks.length ? "Temporada" : "Fuera de temporada"), vacio: (j) => (j.mlb && j.mlb.nota) || "La MLB no tiene juegos. Esta sección se activa sola con el Spring Training y la temporada regular." }
+  ];
+  const picksOf = (j, s) => (s.key === "mlb" ? (j.mlb && j.mlb.picks) || [] : j[s.key] || []);
+
+  // ---------- Banderas y escudos ----------
+  const norm = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  const FLAGS = window.FLAGS || {};
+  const PAIS = {};
+  try {
+    const dn = new Intl.DisplayNames(["es"], { type: "region" });
+    for (const c of Object.keys(FLAGS)) if (c.length === 2) { const n = dn.of(c); if (n && n !== c) PAIS[norm(n)] = c; }
+  } catch (_) {}
+  Object.assign(PAIS, { "inglaterra": "GB-ENG", "escocia": "GB-SCT", "gales": "GB-WLS", "irlanda del norte": "GB", "gran bretana": "GB", "reino unido": "GB", "chequia": "CZ", "republica checa": "CZ", "turquia": "TR", "holanda": "NL", "paises bajos": "NL", "estados unidos": "US", "ee uu": "US", "eeuu": "US", "usa": "US", "corea del sur": "KR", "corea": "KR", "corea del norte": "KP", "costa de marfil": "CI", "bosnia": "BA", "bosnia y herzegovina": "BA", "macedonia del norte": "MK", "macedonia": "MK", "kosovo": "XK", "curazao": "CW", "curacao": "CW", "eswatini": "SZ", "suazilandia": "SZ", "swaziland": "SZ", "rd congo": "CD", "republica democratica del congo": "CD", "arabia saudi": "SA", "arabia saudita": "SA", "iran": "IR", "rusia": "RU", "emiratos arabes unidos": "AE", "emiratos arabes": "AE", "nueva zelanda": "NZ", "trinidad y tobago": "TT", "republica dominicana": "DO", "cabo verde": "CV", "san marino": "SM", "irlanda": "IE", "japon": "JP", "catar": "QA", "qatar": "QA", "sudafrica": "ZA", "camerun": "CM", "argelia": "DZ", "marruecos": "MA", "tunez": "TN", "egipto": "EG", "peru": "PE", "panama": "PA", "haiti": "HT", "bielorrusia": "BY", "belarus": "BY" });
+
+  // Colores de club: clave normalizada | color principal | color secundario (colores aproximados de sus uniformes)
+  const CLUBES = ("arsenal|#EF0107|#FFFFFF;chelsea|#034694|#FFFFFF;liverpool|#C8102E|#00B2A9;manchester city|#6CABDD|#1C2C5B;man city|#6CABDD|#1C2C5B;manchester united|#DA291C|#FBE122;man united|#DA291C|#FBE122;tottenham|#132257|#FFFFFF;newcastle|#241F20|#FFFFFF;aston villa|#670E36|#95BFE5;west ham|#7A263A|#1BB1E7;everton|#003399|#FFFFFF;brighton|#0057B8|#FFFFFF;crystal palace|#1B458F|#C4122E;fulham|#FFFFFF|#000000;brentford|#E30613|#FFFFFF;nottingham forest|#DD0000|#FFFFFF;wolverhampton|#FDB913|#231F20;wolves|#FDB913|#231F20;bournemouth|#DA291C|#000000;leeds|#FFFFFF|#1D428A;sunderland|#EB172B|#FFFFFF;burnley|#6C1D45|#99D6EA;" +
+    "real madrid|#FFFFFF|#FEBE10;barcelona|#A50044|#004D98;atletico de madrid|#CB3524|#272E61;atletico madrid|#CB3524|#272E61;sevilla|#FFFFFF|#D71A28;betis|#00954C|#FFFFFF;real sociedad|#0067B1|#FFFFFF;athletic|#EE2523|#FFFFFF;villarreal|#FFE667|#005187;valencia|#FFFFFF|#EE3524;celta|#8AC3EE|#E5254E;osasuna|#D91A21|#0A346F;getafe|#005999|#FFFFFF;girona|#CD2534|#FFFFFF;mallorca|#E20613|#000000;rayo vallecano|#FFFFFF|#E53027;espanyol|#007FC8|#FFFFFF;alaves|#0761AF|#FFFFFF;levante|#004D98|#A50044;elche|#FFFFFF|#05642C;oviedo|#0047AB|#FFFFFF;" +
+    "inter|#0068A8|#000000;milan|#FB090B|#000000;juventus|#000000|#FFFFFF;napoli|#12A0D7|#FFFFFF;roma|#8E1F2F|#F0BC42;lazio|#87D8F7|#FFFFFF;atalanta|#1E71B8|#000000;fiorentina|#482E92|#FFFFFF;bologna|#1A2F48|#A21C26;torino|#8A1E03|#FFFFFF;genoa|#A51D2D|#002147;como|#1B3A6B|#FFFFFF;" +
+    "bayern|#DC052D|#0066B2;dortmund|#FDE100|#000000;leverkusen|#E32221|#000000;leipzig|#DD0741|#FFFFFF;stuttgart|#FFFFFF|#E32219;frankfurt|#E1000F|#000000;wolfsburg|#65B32E|#FFFFFF;gladbach|#FFFFFF|#000000;monchengladbach|#FFFFFF|#000000;freiburg|#000000|#E2001A;union berlin|#EB1923|#FFFFFF;werder bremen|#1D9053|#FFFFFF;hoffenheim|#1961B5|#FFFFFF;" +
+    "paris saint germain|#004170|#DA291C;psg|#004170|#DA291C;marsella|#FFFFFF|#2FAEE0;marseille|#FFFFFF|#2FAEE0;lyon|#FFFFFF|#DA0812;monaco|#E7001B|#FFFFFF;lille|#E01E13|#1A2C5B;lens|#FFD100|#E30613;rennes|#E13327|#000000;niza|#C8102E|#000000;nice|#C8102E|#000000;" +
+    "benfica|#E83030|#FFFFFF;porto|#003D80|#FFFFFF;sporting cp|#008057|#FFFFFF;sporting de lisboa|#008057|#FFFFFF;braga|#E30613|#FFFFFF;ajax|#FFFFFF|#D2122E;psv|#ED1C24|#FFFFFF;feyenoord|#FFFFFF|#E3001B;" +
+    "club america|#FFE600|#002C5F;america|#FFE600|#002C5F;guadalajara|#CD1F2D|#FFFFFF;chivas|#CD1F2D|#FFFFFF;cruz azul|#0047AB|#FFFFFF;pumas|#00205B|#C9A227;tigres uanl|#FDB913|#00205B;monterrey|#00205B|#FFFFFF;rayados|#00205B|#FFFFFF;toluca|#D50032|#FFFFFF;santos laguna|#00843D|#FFFFFF;pachuca|#00205B|#FFFFFF;leon|#00843D|#FFD100;atlas|#E31837|#000000;puebla|#FFFFFF|#00205B;tijuana|#D50032|#000000;xolos|#D50032|#000000;queretaro|#00205B|#000000;necaxa|#D50032|#FFFFFF;juarez|#00A651|#E31837;mazatlan fc|#5A2D82|#FFFFFF;atletico san luis|#D50032|#00205B;" +
+    "flamengo|#C3281E|#000000;palmeiras|#006437|#FFFFFF;corinthians|#FFFFFF|#000000;sao paulo|#FFFFFF|#E30613;santos|#FFFFFF|#000000;gremio|#0D80BF|#000000;internacional|#E30613|#FFFFFF;fluminense|#870A28|#00613C;botafogo|#000000|#FFFFFF;vasco|#000000|#FFFFFF;atletico mineiro|#000000|#FFFFFF;cruzeiro|#0033A0|#FFFFFF;bahia|#0055A4|#E30613;fortaleza|#0033A0|#E30613;" +
+    "boca juniors|#103F79|#F3B229;river plate|#FFFFFF|#E30613;racing|#6CACE4|#FFFFFF;independiente|#E30613|#FFFFFF;san lorenzo|#00205B|#E30613;estudiantes|#E30613|#FFFFFF;velez|#FFFFFF|#0033A0;talleres|#00205B|#FFFFFF;rosario central|#003DA5|#FDD000;newell s|#E30613|#000000;lanus|#7B1E3A|#FFFFFF;godoy cruz|#0033A0|#FFFFFF;" +
+    "atletico nacional|#00843D|#FFFFFF;millonarios|#0033A0|#FFFFFF;america de cali|#E30613|#FFFFFF;junior|#E30613|#FFFFFF;santa fe|#E30613|#FFFFFF;deportivo cali|#00843D|#FFFFFF;" +
+    "penarol|#FFD100|#000000;nacional|#FFFFFF|#0033A0;defensor sporting|#5B2C83|#FFFFFF;danubio|#FFFFFF|#000000;liverpool fc montevideo|#000000|#0033A0;colo colo|#FFFFFF|#000000;universidad de chile|#0033A0|#E30613;universidad catolica|#FFFFFF|#0033A0;alianza lima|#00205B|#FFFFFF;universitario|#F5E6C8|#8B1E3F;sporting cristal|#6CC4E8|#FFFFFF;sport boys|#F49AC1|#000000;ldu|#FFFFFF|#E30613;liga de quito|#FFFFFF|#E30613;barcelona sc|#FFD100|#000000;emelec|#0033A0|#FFFFFF;independiente del valle|#000000|#0033A0;" +
+    "inter miami|#F7B5CD|#231F20;la galaxy|#00245D|#FFD200;lafc|#000000|#C39E6D;seattle sounders|#5D9741|#005595;atlanta united|#80000A|#000000;" +
+    "leones del caracas|#F2B134|#1C2B4A;navegantes del magallanes|#1C3F94|#E30613;cardenales de lara|#C8102E|#FFFFFF;tigres de aragua|#E87722|#000000;aguilas del zulia|#1C3F94|#F2B134;caribes de anzoategui|#C8102E|#1C2B4A;bravos de margarita|#1C2B4A|#C8102E;tiburones de la guaira|#C8102E|#1C3F94;" +
+    "tigres del licey|#1C3F94|#FFFFFF;licey|#1C3F94|#FFFFFF;leones del escogido|#C8102E|#FFFFFF;escogido|#C8102E|#FFFFFF;aguilas cibaenas|#F2C200|#000000;estrellas orientales|#00843D|#FFFFFF;toros del este|#E2611B|#000000;gigantes del cibao|#7B1E3A|#FFFFFF;" +
+    "tomateros|#C8102E|#1C2B4A;naranjeros|#F47920|#1C2B4A;charros|#1C2B4A|#C8102E;aguilas de mexicali|#1C2B4A|#F2B134;venados|#C8102E|#FFFFFF;yaquis|#1C2B4A|#C8102E;algodoneros|#00843D|#FFFFFF;mayos|#5A2D82|#F2B134;caneros|#00843D|#F2B134;jaguares de nayarit|#111111|#F2B134;sultanes|#1C2B4A|#FFFFFF")
+    .split(";").filter(Boolean).map((r) => r.split("|")).sort((a, b) => b[0].length - a[0].length);
+
+  const PALETA = ["#1d8a55", "#2563c9", "#c4592a", "#b42b3c", "#7a4fc4", "#0f8c8c", "#b7791f", "#4a5568", "#d0457a", "#2f855a"];
+  const lum = (hex) => { const h = hex.replace("#", ""); const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const initials = (n) => {
+    const words = n.split(/\s+/).filter((w) => w && !/^(de|del|la|los|las|el|y|fc|cf|sc|cd|club)$/i.test(w));
+    return (words.length > 1 ? words[0][0] + words[words.length - 1][0] : (words[0] || n).slice(0, 3)).toUpperCase();
+  };
+  // Escudos oficiales (crests.js): coincidencia exacta del nombre, luego sin sufijos tipo FC, luego alias de 2+ palabras dentro del nombre
+  const CR = window.CRESTS || { alias: {}, img: [] };
+  const MULTI = Object.keys(CR.alias).filter((k) => k.includes(" ")).sort((a, b) => b.length - a.length);
+  const crestLogo = (n) => {
+    let i = CR.alias[n];
+    if (i === undefined) { const s = n.split(" ").filter((w) => !/^(fc|afc|cf|ac|cd|club)$/.test(w)).join(" "); i = CR.alias[s]; }
+    if (i === undefined) { const k = MULTI.find((k) => (" " + n + " ").includes(" " + k + " ")); if (k) i = CR.alias[k]; }
+    return i === undefined ? null : CR.img[i];
+  };
+  let cid = 0;
+  const SHIELD = "M18 1.5l15 5.2v11.1c0 9.8-6.4 16.5-15 19.7C9.4 34.3 3 27.6 3 17.8V6.7z";
+  const crest = (name) => {
+    const raw = String(name || "").trim();
+    const n = norm(raw);
+    const code = PAIS[n];
+    if (code && FLAGS[code]) {
+      return `<span class="crest flag" title="${esc(raw)}">${FLAGS[code].replace("<svg ", '<svg preserveAspectRatio="xMidYMid slice" aria-hidden="true" ')}</span>`;
+    }
+    const logo = crestLogo(n);
+    if (logo) return `<span class="crest logo" title="${esc(raw)}"><img src="${logo}" alt="" width="36" height="36" loading="lazy" decoding="async"></span>`;
+    const hit = CLUBES.find(([k]) => (" " + n + " ").includes(" " + k + " "));
+    let c1, c2;
+    if (hit) { c1 = hit[1]; c2 = hit[2]; }
+    else { let h = 0; for (const ch of n) h = (h * 31 + ch.codePointAt(0)) >>> 0; c1 = PALETA[h % PALETA.length]; c2 = "#FFFFFF"; }
+    const id = "cp" + ++cid;
+    const ink = lum(c1) > 0.62 ? "#14201a" : "#ffffff";
+    return `<span class="crest club" title="${esc(raw)}"><svg viewBox="0 0 36 38" aria-hidden="true"><defs><clipPath id="${id}"><path d="${SHIELD}"/></clipPath></defs><g clip-path="url(#${id})"><rect width="36" height="38" fill="${c1}"/><rect width="36" height="10.5" fill="${c2}"/><rect y="10.5" width="36" height="1.6" fill="${ink}" opacity=".18"/></g><path d="${SHIELD}" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="1.4"/><text x="18" y="26.5" text-anchor="middle" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="12" letter-spacing=".3" fill="${ink}">${esc(initials(raw))}</text></svg></span>`;
+  };
+  const teamsHtml = (partido) => {
+    const m = String(partido || "").split(/\s+vs\.?\s+/i);
+    if (m.length !== 2) return `<div class="match-solo">${esc(partido)}</div>`;
+    return `<div class="teams"><div class="team">${crest(m[0])}<span>${esc(m[0])}</span></div><span class="vs">VS</span><div class="team away">${crest(m[1])}<span>${esc(m[1])}</span></div></div>`;
+  };
+  const ring = (prob) => {
+    const C = 2 * Math.PI * 26;
+    return `<div class="ring" aria-label="Probabilidad estimada ${prob}%"><svg viewBox="0 0 64 64"><circle class="trk" cx="32" cy="32" r="26" fill="none" stroke-width="7"/><circle class="val" cx="32" cy="32" r="26" fill="none" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${(C * (1 - prob / 100)).toFixed(2)}"/></svg><span>${prob}%</span></div>`;
+  };
+
+  let jornadas = [];
+  let selected = null;
+
+  function pickCard(p, i) {
+    const prob = Math.max(0, Math.min(100, Math.round(Number(p.prob) || 0)));
+    const c = conf(prob);
+    const res = RES[p.resultado] ? p.resultado : "pendiente";
+    const r = riesgoDe(p, prob);
+    const aviso = p.advertencia || (r === "alto" ? "probabilidad por debajo del 60 % o datos incompletos; tómala como jugada de valor, no como segura." : "");
+    return `<article class="pick${r === "alto" ? " alto" : ""}" style="--i:${i}">
+      <div class="pick-top"><span class="lg">${icon("i-trophy")}${esc(p.liga)}</span><span class="hr">${icon("i-clock")}${esc(p.hora)}</span></div>
+      <div class="pick-body">
+        ${teamsHtml(p.partido)}
+        <div class="bet-row">${ring(prob)}<div class="bet"><small>Jugada</small><b>${esc(p.jugada)}</b><span class="odds" title="Cuota decimal">@ ${esc(p.cuota)}</span></div></div>
+        <div class="chips"><span class="chip ${c}">${icon(CONF_ICON[c])}Confianza ${c}</span><span class="chip r-${r}">${icon(r === "alto" ? "i-alert" : "i-safe")}${RIESGO[r]}</span><span class="chip ${res}">${icon(RES[res][1])}${RES[res][0]}${p.marcador ? " · " + esc(p.marcador) : ""}</span></div>
+        ${aviso ? avisoHtml(aviso) : ""}
+        <p class="why">${esc(p.razon)}</p>
+        ${p.alternativa ? `<div class="alt">${icon("i-safe")}<span><b>Más segura:</b> ${esc(p.alternativa)}</span></div>` : ""}
+      </div>
+    </article>`;
+  }
+
+  const emptyBox = (s, text) => `<div class="empty" style="--k:${s.color}">${icon(s.key === "mlb" ? "i-moon" : s.icon)}<div><strong>${s.key === "mlb" && /temporada/i.test(text) ? "Fuera de temporada" : "Sin jugadas hoy"}</strong><span>${esc(text)}</span></div></div>`;
+
+  function allPicks(j) { return SECCIONES.flatMap((s) => picksOf(j, s)); }
+
+  function renderKpis(j) {
+    let a = 0, f = 0;
+    for (const x of jornadas) for (const p of allPicks(x)) { if (p.resultado === "acierto") a++; else if (p.resultado === "fallo") f++; }
+    const hoy = j ? allPicks(j) : [];
+    const avg = hoy.length ? Math.round(hoy.reduce((t, p) => t + (Number(p.prob) || 0), 0) / hoy.length) : 0;
+    const best = hoy.reduce((b, p) => (Number(p.prob) > (b ? Number(b.prob) : -1) ? p : b), null);
+    const tiles = [
+      ["i-list", hoy.length, "Jugadas del día"],
+      ["i-gauge", hoy.length ? avg + "%" : "—", "Probabilidad media"],
+      ["i-flame", best ? Math.round(best.prob) + "%" : "—", best ? "Mejor: " + best.jugada : "Mejor jugada"],
+      ["i-target", a + f ? Math.round((a / (a + f)) * 100) + "%" : "—", a + f ? `Efectividad (${a}-${f})` : "Efectividad"]
+    ];
+    $("kpis").innerHTML = tiles.map(([ic, v, l]) => `<div class="kpi">${icon(ic)}<div style="min-width:0"><b>${esc(v)}</b><small style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l)}</small></div></div>`).join("");
+  }
+
+  function renderPopulares(j) {
+    const list = (j && j.populares) || [];
+    const pct = (v) => { const n = Math.round(Number(v)); return Number.isFinite(n) && n > 0 ? Math.min(100, n) : null; };
+    const bar = (lbl, v, cls) => v == null ? "" : `<div class="popbar"><span>${lbl}</span><div class="pbar${cls ? " " + cls : ""}"><i style="width:${v}%"></i></div><b>${v}%</b></div>`;
+    $("populares").innerHTML = list.length ? list.map((x) => {
+      const b = pct(x.pct_apuestas), m = pct(x.pct_dinero), u = safeUrl(x.url);
+      const cmp = x.comparacion ? `<div class="vs-us ${x.coincide === true ? "si" : x.coincide === false ? "no" : ""}">${icon(x.coincide === false ? "i-alert" : "i-target")}<span>${esc(x.comparacion)}</span></div>` : "";
+      return `<article class="popc">
+        <div class="top"><span>${esc(x.liga || x.deporte || "")}</span><span>${esc(x.hora || "")}</span></div>
+        <h4>${esc(x.jugada)}</h4>
+        <div class="m">${esc(x.partido || "")}${x.cuota ? " · @ " + esc(x.cuota) : ""}</div>
+        ${bar("Boletos", b)}${bar("Dinero", m, "money")}
+        ${cmp}
+        ${x.fuente ? `<div class="src">Fuente: ${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(x.fuente)}</a>` : esc(x.fuente)}</div>` : ""}
+      </article>`;
+    }).join("") : emptyBox({ key: "p", icon: "i-flame", color: "#8a4fd6" }, (j && j.populares_nota) || "Este apartado se llena desde la próxima actualización diaria con los porcentajes de apuestas del público.");
+  }
+
+  function renderPerf() {
+    const g = {};
+    const add = (k, ok, pr) => { const x = (g[k] = g[k] || { a: 0, n: 0, p: 0 }); x.a += ok; x.n++; x.p += pr; };
+    for (const j of jornadas) {
+      for (const s of SECCIONES) for (const p of picksOf(j, s)) {
+        if (p.resultado !== "acierto" && p.resultado !== "fallo") continue;
+        const ok = p.resultado === "acierto" ? 1 : 0, pr = Number(p.prob) || 0;
+        add("s:" + s.corto, ok, pr);
+        add(pr >= 75 ? "c:75 % o más" : pr >= 65 ? "c:65–74 %" : "c:Menos de 65 %", ok, pr);
+        add("t:Total", ok, pr);
+      }
+      for (const t of j.parleys || []) {
+        if (t.resultado !== "acierto" && t.resultado !== "fallo") continue;
+        const n = (t.jugadas || []).length, ok = t.resultado === "acierto" ? 1 : 0, pr = Number(t.prob) || 0;
+        add("p:" + (n >= 3 ? "3 o más patas" : n + " patas"), ok, pr);
+        add("p:Todos", ok, pr);
+      }
+    }
+    const rows = (pref, order) => Object.keys(g).filter((k) => k.startsWith(pref))
+      .sort((a, b) => (order ? order.indexOf(a) - order.indexOf(b) : g[b].n - g[a].n))
+      .map((k) => {
+        const x = g[k], real = Math.round((x.a / x.n) * 100), dicho = Math.round(x.p / x.n);
+        const col = real >= dicho - 5 ? "var(--good)" : real >= dicho - 15 ? "var(--warn)" : "var(--bad)";
+        return `<div class="prow" title="Se estimó ${dicho} % y salió ${real} %"><span>${esc(k.slice(2))}</span><div class="pbar" style="--c:${col}"><i style="width:${real}%"></i><em style="left:calc(${dicho}% - 1px)"></em></div><b>${real}% <small>${x.a}/${x.n}</small></b></div>`;
+      }).join("");
+    const panel = (ic, t, body) => (body ? `<section class="panel"><h3>${icon(ic)}${esc(t)}</h3>${body}</section>` : "");
+    const html = panel("i-list", "Por deporte", rows("s:") + rows("t:")) +
+      panel("i-gauge", "Lo estimado vs. lo real", rows("c:", ["c:75 % o más", "c:65–74 %", "c:Menos de 65 %"])) +
+      panel("i-ticket", "Parleys", rows("p:", ["p:2 patas", "p:3 o más patas", "p:Todos"]));
+    $("perf").innerHTML = html
+      ? html + `<p class="perf-legend" style="grid-column:1/-1">La barra es el % de aciertos real y la raya vertical, la probabilidad que se había estimado. En rojo: acertamos bastante menos de lo previsto.</p>`
+      : emptyBox({ key: "p", icon: "i-target", color: "var(--club)" }, "Todavía no hay resultados cerrados.");
+    const tot = g["t:Total"];
+    $("perf-tag").textContent = tot ? `${tot.n} jugadas cerradas` : "Historial";
+  }
+
+  function render() {
+    const j = jornadas.find((x) => x.fecha === selected) || jornadas[0];
+    $("dates").innerHTML = jornadas.map((x) => { const p = parts(x.fecha); return `<button type="button" data-d="${esc(x.fecha)}" aria-pressed="${x === j}"><small>${p ? DIAS[p.w] : ""}</small><b>${p ? p.d : esc(x.fecha)}</b><small>${p ? MESES[p.m - 1] : ""}</small></button>`; }).join("");
+    renderKpis(j);
+    renderPerf();
+    renderPopulares(j);
+    if (!j) {
+      $("stamp").textContent = "Sin jornadas publicadas";
+      $("boards").innerHTML = emptyBox(SECCIONES[0], "La primera selección aparecerá aquí en cuanto se publique el análisis del día.");
+      return;
+    }
+    const p = parts(j.fecha);
+    $("stamp").textContent = `${p ? `${DIAS[p.w]} ${p.d} ${MESES[p.m - 1]}` : j.fecha}${j.actualizado ? " · " + j.actualizado : ""}`;
+    if (j.resumen) $("summary").textContent = j.resumen;
+
+    $("subnav").innerHTML = SECCIONES.map((s) => `<a href="#${s.id}" style="--k:${s.color}">${icon(s.icon)}${s.corto}<span class="n">${picksOf(j, s).length}</span></a>`).join("") + `<a href="#parleys-sec" style="--k:var(--gold)">${icon("i-ticket")}Parleys<span class="n">${(j.parleys || []).length}</span></a><a href="#populares-sec" style="--k:#8a4fd6">${icon("i-flame")}Lo más apostado<span class="n">${(j.populares || []).length}</span></a><a href="#rendimiento" style="--k:var(--club)">${icon("i-target")}Rendimiento</a>`;
+
+    $("boards").innerHTML = SECCIONES.map((s) => {
+      const ps = picksOf(j, s);
+      return `<section class="board" id="${s.id}" style="--k:${s.color}">
+        <div class="board-head"><div class="badge-ico">${icon(s.icon)}</div><h2>${s.titulo}</h2><span class="tag">${esc(s.tag(j))}</span><span class="rule"></span></div>
+        ${ps.length ? `<div class="picks">${ps.map(pickCard).join("")}</div>` : emptyBox(s, s.vacio(j))}
+      </section>`;
+    }).join("");
+
+    $("parleys").innerHTML = (j.parleys || []).map((t, i) => {
+      const r = RES[t.resultado] && t.resultado !== "pendiente" ? t.resultado : null;
+      const rk = riesgoParley(t);
+      const avisoP = t.advertencia || (rk === "alto" ? "cada pata multiplica el riesgo; la probabilidad combinada es baja." : "");
+      return `<div class="ticket" style="--i:${i}">
+        <div class="ticket-head">${icon("i-ticket")}<h3>${esc(t.nombre)}</h3>${r ? `<span class="chip ${r} res">${icon(RES[r][1])}${RES[r][0]}</span>` : ""}</div>
+        <ul>${(t.jugadas || []).map((x) => `<li>${icon("i-check")}<span>${esc(x)}</span></li>`).join("")}</ul>
+        ${avisoP ? avisoHtml(avisoP) : ""}
+        <div class="ticket-foot"><div><span>Cuota</span><b>${esc(t.cuota)}</b></div><div><span>Prob. aprox.</span><b class="p">${esc(t.prob)}%</b></div></div>
+      </div>`;
+    }).join("") || emptyBox({ key: "p", icon: "i-ticket", color: "var(--gold)" }, "No se armaron combinadas este día.");
+
+    const d = j.descartes || [];
+    $("sec-d").hidden = !d.length;
+    $("discards").innerHTML = d.map((x) => `<li>${icon("i-ban")}<span>${esc(x)}</span></li>`).join("");
+    const s = j.fuentes || [];
+    $("sec-s").hidden = !s.length;
+    $("sources").innerHTML = s.map((x) => { const u = safeUrl(x.url); return `<li class="src">${icon("i-link")}${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(x.nombre)}</a>` : `<span>${esc(x.nombre)}</span>`}</li>`; }).join("");
+  }
+
+  $("dates").addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-d]");
+    if (!b) return;
+    selected = b.dataset.d;
+    render();
+  });
+
+  try {
+    const raw = JSON.parse($("jornadas-data").textContent || "[]");
+    jornadas = (Array.isArray(raw) ? raw : []).filter((x) => x && x.fecha).sort((a, b) => (a.fecha < b.fecha ? 1 : -1)).slice(0, 30);
+  } catch (e) {
+    $("status").hidden = false;
+    $("status").textContent = "Los datos de la jornada están dañados y no se pudieron leer.";
+  }
+  if (!selected && jornadas[0]) selected = jornadas[0].fecha;
+  render();
+})();
+</script>
+
+</body></html>
